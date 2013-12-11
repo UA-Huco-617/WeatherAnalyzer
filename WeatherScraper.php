@@ -22,7 +22,7 @@ abstract class WeatherScraper {
 	}
 
 	public function log($message = null) {
-		if (!empty($message)) $this->weatheranalyzer->log($message);
+		if (!empty($this->weatheranalyzer)) $this->weatheranalyzer->log($message);
 	}
 	
 	/*************************************************
