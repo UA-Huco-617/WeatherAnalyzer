@@ -6,7 +6,8 @@
 *	an interface and basic functionality for a scraper that
 *	collects data from one particular weather URL page.
 *
-*	Children should override three things:
+*	Children should override four things:
+*		• $sitename ==> e.g., "AccuWeather 10-day forecast"
 *		• $weatherurl ==> the URL this scraper collects data from
 *		• scrape() ==> function where the scraper does its stuff
 *		• getResults() ==> function that returns the weather data
@@ -14,15 +15,21 @@
 
 abstract class WeatherScraper {
 
-	protected $weatheranalyzer;			//	the manager object
-	protected $weatherurl = '';			//	children should override this
+	protected $weathermanager;			//	the manager object
+	protected $weatherdataobject;		//	a data transport object
 	
-	public function __construct($weatheranalyzer = null) {
-		$this->weatheranalyzer = $weatheranalyzer;
+	//	children should override these:
+	protected $sitename = '';			//	e.g., "Weather.com 7-day forecast"
+	protected $weatherurl = '';			//	your URL to scrape
+	
+	
+	public function __construct($weathermanager = null) {
+		$this->weathermanager = $weathermanager;
+		$this->weatherdataobject = new WeatherDTO();
 	}
 
 	public function log($message = null) {
-		if (!empty($this->weatheranalyzer)) $this->weatheranalyzer->log($message);
+		if (!empty($this->weathermanager)) $this->weathermanager->log($message);
 	}
 	
 	/*************************************************
@@ -33,8 +40,10 @@ abstract class WeatherScraper {
 	//	and should return false otherwise.
 	public abstract function scrape();
 	
-	//	getResults() should return an associative array of data if
-	//	it worked, otherwise it should return null.
+	//	getResults() should return a loaded Weather Data Transport Object:
+	//		return $this->weatherdataobject;
+	//	If you haven't successfully scraped data, the
+	//	object will simply contain no data.
 	public abstract function getResults();
 
 }
