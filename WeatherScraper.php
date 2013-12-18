@@ -6,17 +6,17 @@
 *	an interface and basic functionality for a scraper that
 *	collects data from one particular weather URL page.
 *
-*	Children should override four things:
+*	Children should override three things:
 *		• $sitename ==> e.g., "AccuWeather 10-day forecast"
 *		• $weatherurl ==> the URL this scraper collects data from
-*		• scrape() ==> function where the scraper does its stuff
-*		• getResults() ==> function that returns the weather data
+*		• scrape() ==> function where the scraper does its stuff;
+*			you may or may not want to break this into sub-functions.
 **********************************************************************/
 
 abstract class WeatherScraper {
 
 	protected $weathermanager;			//	the manager object
-	protected $weatherdataobject;		//	a data transport object
+	protected $weatherdto;				//	a data transport object
 	
 	//	children should override these:
 	protected $sitename = '';			//	e.g., "Weather.com 7-day forecast"
@@ -26,25 +26,28 @@ abstract class WeatherScraper {
 	public function __construct($weathermanager = null) {
 		$this->weathermanager = $weathermanager;
 		$this->weatherdataobject = new WeatherDTO();
+		$this->weatherdto->setSiteName($this->sitename);
 	}
 
 	public function log($message = null) {
 		if (!empty($this->weathermanager)) $this->weathermanager->log($message);
 	}
 	
+	public function getWeatherDTO() {
+		//return a loaded Weather Data Transport Object
+		return $this->weatherdto;
+	}
+	
+	
 	/*************************************************
-	*	Abstract methods for children to define
+	*	Abstract method for children to define
 	*************************************************/
 	
-	//	scrape() should return true if you determine that it worked,
-	//	and should return false otherwise.
+	//	scrape() should collect data and put it into
+	//	the WeatherDTO object. If you can't scrape
+	//	data, the object will remain empty.
 	public abstract function scrape();
-	
-	//	getResults() should return a loaded Weather Data Transport Object:
-	//		return $this->weatherdataobject;
-	//	If you haven't successfully scraped data, the
-	//	object will simply contain no data.
-	public abstract function getResults();
+
 
 }
 
