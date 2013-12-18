@@ -44,8 +44,9 @@ abstract class WeatherScraper {
 	*************************************************/
 	
 	//	scrape() should collect data and put it into
-	//	the WeatherDTO object. If you can't scrape
-	//	data, the object will remain empty.
+	//	the WeatherDTO object. If you determine it
+	//	worked, return true. If you determine that
+	//	you can't scrape data, return false.
 	public abstract function scrape();
 
 
