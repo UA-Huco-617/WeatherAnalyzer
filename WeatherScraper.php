@@ -25,7 +25,7 @@ abstract class WeatherScraper {
 	
 	public function __construct($weathermanager = null) {
 		$this->weathermanager = $weathermanager;
-		$this->weatherdataobject = new WeatherDTO();
+		$this->weatherdto = new WeatherDTO();
 		$this->weatherdto->setSiteName($this->sitename);
 	}
 
