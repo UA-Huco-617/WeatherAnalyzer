@@ -14,12 +14,15 @@ class WeatherDTO {
 	protected $date;
 	protected $hightemp;
 	protected $lowtemp;
+	protected $scraper;
 	protected $precipType;
 	protected $sitename;
 
 	
-	public function __construct() {
+	public function __construct(WeatherScraper $scraper) {
 		$this->date = new Date();
+		$this->scraper = $scraper;
+		$this->sitename = $this->scraper->getSiteName();
 	}
 	
 	/***************************
