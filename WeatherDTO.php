@@ -11,12 +11,12 @@ class WeatherDTO {
 
 	protected $actualprecip;
 	protected $chanceprecip;
-	protected $date;
+	protected $date;		//	forecast date
 	protected $hightemp;
 	protected $lowtemp;
-	protected $scraper;
+	protected $scraper;		//	scraper that built this object
 	protected $precipType;
-	protected $sitename;
+	protected $sitename;	//	scraper's target site (make this an ID?)
 
 	
 	public function __construct(WeatherScraper $scraper) {
