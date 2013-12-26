@@ -6,6 +6,11 @@ class WeatherCollection implements Iterator {
 
 
 
+	public function addToCollection($weatherdto) {
+	
+	}
+
+
 }
 
 ?>
