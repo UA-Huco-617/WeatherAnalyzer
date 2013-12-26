@@ -8,7 +8,7 @@
 *
 *	Children should override three things:
 *		• $sitename ==> e.g., "AccuWeather 10-day forecast"
-*		• $weatherurl ==> the URL this scraper collects data from
+*		• $siteurl ==> the URL this scraper collects data from
 *		• scrape() ==> function where the scraper does its stuff;
 *			you may or may not want to break this into sub-functions.
 **********************************************************************/
@@ -16,7 +16,7 @@
 abstract class WeatherScraper {
 
 	protected $weathermanager;			//	the manager object
-	protected $weathercollection;		//	a data transport object
+	protected $weathercollection;		//	a collection of DTOs
 	
 	//	children should override these:
 	protected $sitename = '';			//	e.g., "Weather.com 7-day forecast"
@@ -57,6 +57,7 @@ abstract class WeatherScraper {
 	//	2. build a new WeatherDTO object:
 	//		$weatherdto = new WeatherDTO($this);
 	//	3. set the forecast date on the WeatherDTO
+	//		$weatherdto->setDate($some_string);
 	//		(we may modify class Date to help people do this)
 	//	4. collect data and push it into the WeatherDTO
 	//	5. add the WeatherDTO object to the collection
