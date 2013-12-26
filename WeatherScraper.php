@@ -61,7 +61,7 @@ abstract class WeatherScraper {
 	//		(we may modify class Date to help people do this)
 	//	4. collect data and push it into the WeatherDTO
 	//	5. add the WeatherDTO object to the collection
-	//		$this->weathercollection->addWeatherDTO($weatherdto);
+	//		$this->weathercollection->addToCollection($weatherdto);
 	//	6. while still more days, go to step 1
 	//	if you determined that the scrape worked, return true;
 	//	else return false.
