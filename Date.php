@@ -11,9 +11,9 @@ class Date {
 	*		$d = new Date('yesterday');
 	************************************************/
 	
-	protected $month = '0';
-	protected $day = '0';
-	protected $year = '0';
+	protected $month = 0;
+	protected $day = 0;
+	protected $year = 0;
 	protected $months = array( 'Unknown', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
 			'August', 'September', 'October', 'November', 'December' );
 	
