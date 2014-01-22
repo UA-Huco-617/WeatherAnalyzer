@@ -86,7 +86,7 @@ class WeatherDTO {
 	}
 	
 	/***************************
-	*	Actual Precipitation(haha)
+	*	Actual Precipitation(Changes)
 	***************************/
 	
 	public function getActualPrecip() {
