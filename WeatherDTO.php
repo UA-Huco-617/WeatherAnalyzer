@@ -58,7 +58,7 @@ class WeatherDTO {
 	}
 	
 	public function setHighTemp($temp = null) {
-		$this->hightemp = (int) $temp;
+		$this->hightemp = $temp;
 	}
 	
 	/***************************
@@ -70,7 +70,7 @@ class WeatherDTO {
 	}
 	
 	public function setLowTemp($temp = null) {
-		$this->lowtemp = (int) $temp;
+		$this->lowtemp = $temp;
 	}
 	
 	/***************************
