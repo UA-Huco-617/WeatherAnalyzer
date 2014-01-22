@@ -13,3 +13,5 @@ There's an abstract 'WeatherScraper' class in the repository. Extend it by overr
 • $sitename
 • $weatherurl
 • scrape() -- should return 'true' on success, 'false' on failure. It should load a WeatherDTO object with the data you collect.
+
+—
