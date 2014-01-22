@@ -98,7 +98,7 @@ class WeatherDTO {
 	}
 	
 	/***************************
-	*	Precipitation Type
+	*	Precipitation Type(michael)
 	***************************/
 	
 	public function getPrecipType() {
