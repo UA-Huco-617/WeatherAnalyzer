@@ -30,8 +30,8 @@ class WeatherDTO {
 	***************************/
 	
 	public function getSiteName() {
-		return $this->sitename;				// Johns test addition!
-	}
+		return $this->sitename;				// Johns test addition! //Sonja's test addition!
+	}	
 	
 	public function setSiteName($sitename = null) {
 		$this->sitename = $sitename;
