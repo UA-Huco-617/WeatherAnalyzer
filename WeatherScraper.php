@@ -11,6 +11,7 @@
 *		• $siteurl ==> the URL this scraper collects data from
 *		• scrape() ==> function where the scraper does its stuff;
 *			you may or may not want to break this into sub-functions.
+*   This comment is very exciting.
 **********************************************************************/
 
 abstract class WeatherScraper {
