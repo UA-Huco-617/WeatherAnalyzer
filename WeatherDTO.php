@@ -9,32 +9,32 @@ class WeatherDTO {
 	*	any format they wish, but can get/set this DTO for easy access.
 	**********************************************************************/
 
-	protected $actualprecip;
 	protected $chanceprecip;
-	protected $date;		//	forecast date
+	protected $date;				//	forecast date
 	protected $hightemp;
 	protected $lowtemp;
-	protected $scraper;		//	scraper that built this object
+	protected $scraper;				//	scraper that built this object
 	protected $precipType;
-	protected $siteID;		//	scraper's site ID
+	protected $proseDescription;	//	i.e., 'partly cloudy'
+	protected $siteID;				//	scraper's site ID
 
 	
 	public function __construct(WeatherScraper $scraper) {
 		$this->date = new Date();
 		$this->scraper = $scraper;
-		$this->sitename = $this->scraper->getSiteName();
+		$this->siteID = $this->scraper->getSiteID();
 	}
 	
 	/***************************
-	*	Site Name
+	*	Site ID
 	***************************/
 	
-	public function getSiteName() {
-		return $this->sitename;				// Johns test addition! //Sonja's test addition! //Ditto for Andrea!
+	public function getSiteID() {
+		return $this->siteID;
 	}	
 	
-	public function setSiteName($sitename = null) {
-		$this->sitename = $sitename;
+	public function setSiteID($siteID = null) {
+		$this->siteID = $siteID;
 	}
 	
 	/***************************
@@ -86,18 +86,6 @@ class WeatherDTO {
 	}
 	
 	/***************************
-	*	Actual Precipitation(Changes)
-	***************************/
-	
-	public function getActualPrecip() {
-		return $this->actualprecip;
-	}
-	
-	public function setActualPrecip($precip = null) {
-		$this->actualprecip = $precip;
-	}
-	
-	/***************************
 	*	Precipitation Type(michael)
 	***************************/
 	
@@ -110,12 +98,17 @@ class WeatherDTO {
 	}
 	
 	/***************************
-	*	Get Database Query
+	*	Prose Description
 	***************************/
-	
-	public function getQuery() {
-	
+
+	public function getProseDescription() {
+		return $this->proseDescription;
 	}
+	
+	public function setProseDescription($desc = null) {
+		$this->proseDescription = $desc;
+	}
+
 }
 
 ?>
