@@ -7,7 +7,7 @@
 *	collects data from one particular weather URL page.
 *
 *	Children should override three things:
-*		• $sitename ==> e.g., "AccuWeather 10-day forecast"
+*		• $siteID ==> your Site ID from the `weather_site` table
 *		• $siteurl ==> the URL this scraper collects data from
 *		• scrape() ==> function where the scraper does its stuff;
 *			you may or may not want to break this into sub-functions.
@@ -20,7 +20,7 @@ abstract class WeatherScraper {
 	protected $weathercollection;		//	a collection of DTOs
 	
 	//	children should override these:
-	protected $sitename = '';			//	e.g., "Weather.com 7-day forecast"
+	protected $siteID = '';				//	your Site ID from the `weather_site` table in birdclub
 	protected $siteurl = '';			//	your URL to scrape
 	
 	
@@ -30,8 +30,8 @@ abstract class WeatherScraper {
 		date_default_timezone_set('America/Edmonton');
 	}
 	
-	public function getSiteName() {
-		return $this->sitename;
+	public function getSiteID() {
+		return $this->siteID;
 	}
 	
 	public function getSiteURL() {
