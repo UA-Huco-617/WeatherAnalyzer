@@ -27,6 +27,7 @@ abstract class WeatherScraper {
 	public function __construct($weathermanager = null) {
 		$this->weathermanager = $weathermanager;
 		$this->weathercollection = new WeatherCollection();
+		date_default_timezone_set('America/Edmonton');
 	}
 	
 	public function getSiteName() {
