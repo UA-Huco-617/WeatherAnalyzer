@@ -38,7 +38,7 @@ abstract class WeatherScraper {
 		return $this->siteurl;
 	}
 
-	public function getWeatherForecastCollection() {
+	public function getWeatherDTOCollection() {
 		//return a loaded Weather Data Collection
 		return $this->weathercollection;
 	}
