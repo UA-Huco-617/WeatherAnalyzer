@@ -16,7 +16,7 @@ class WeatherDTO {
 	protected $lowtemp;
 	protected $scraper;		//	scraper that built this object
 	protected $precipType;
-	protected $sitename;	//	scraper's target site (make this an ID?)
+	protected $siteID;		//	scraper's site ID
 
 	
 	public function __construct(WeatherScraper $scraper) {
@@ -108,7 +108,14 @@ class WeatherDTO {
 	public function setPrecipType($type = null) {
 		$this->precipType = $type;
 	}
-
+	
+	/***************************
+	*	Get Database Query
+	***************************/
+	
+	public function getQuery() {
+	
+	}
 }
 
 ?>
