@@ -1,6 +1,6 @@
 <?php
 
-class Scraper_YEGintl extends Scraper_RealWeather {
+class Scraper_YEGintl extends RealWeatherScraper {
 
 	
 	protected $stationID = '50149';		//	Environment Canada's station #
