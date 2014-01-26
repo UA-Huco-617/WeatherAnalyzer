@@ -14,19 +14,21 @@ class WeatherDTO {
 	protected $hightemp;
 	protected $lowtemp;
 	protected $precipType;
-	protected $precipUnit;
+	protected $precipUnit = 'mm';	//	default value
 	protected $proseDescription;	//	i.e., 'partly cloudy'
+	protected $tempUnit = 'C';		//	default value
+	
 	protected $scraper;				//	scraper that built this object
 	protected $siteID;				//	scraper's site ID
-	protected $tempUnit;
-
+	protected $dbhelper;			//	DatabaseMapper object to handle I/O
 	
 	public function __construct(WeatherScraper $scraper = null) {
 		$this->date = new Date();
 		if (!empty($scraper)) {
 			$this->scraper = $scraper;
-			$this->siteID = $this->scraper->getSiteID();
+			$this->siteID = $this->scraper->getSiteID();	// method guaranteed by WeatherScraper class
 		}
+		$this->dbhelper = Database_MapperFactory::getDatabaseMapper($this);
 	}
 	
 	/***************************
@@ -135,6 +137,32 @@ class WeatherDTO {
 	
 	public function setProseDescription($desc = null) {
 		$this->proseDescription = $desc;
+	}
+	
+	
+	/***************************
+	*	Database Access
+	***************************/
+	
+	public function saveToDatabase() {
+		if ($this->dbhelper->saveToDatabase()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/***************************
+	*	Logfile Access
+	*	(push this up to Scraper)
+	***************************/
+	
+	public function log($message = '') {
+		if (!empty($this->scraper)) {
+			$this->scraper->log($message);
+		} else {
+			echo $message . "\n";
+		}
 	}
 
 }
