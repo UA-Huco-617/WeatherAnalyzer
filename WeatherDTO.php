@@ -13,16 +13,20 @@ class WeatherDTO {
 	protected $date;				//	forecast date
 	protected $hightemp;
 	protected $lowtemp;
-	protected $scraper;				//	scraper that built this object
 	protected $precipType;
+	protected $precipUnit;
 	protected $proseDescription;	//	i.e., 'partly cloudy'
+	protected $scraper;				//	scraper that built this object
 	protected $siteID;				//	scraper's site ID
+	protected $tempUnit;
 
 	
-	public function __construct(WeatherScraper $scraper) {
+	public function __construct(WeatherScraper $scraper = null) {
 		$this->date = new Date();
-		$this->scraper = $scraper;
-		$this->siteID = $this->scraper->getSiteID();
+		if (!empty($scraper)) {
+			$this->scraper = $scraper;
+			$this->siteID = $this->scraper->getSiteID();
+		}
 	}
 	
 	/***************************
@@ -74,6 +78,18 @@ class WeatherDTO {
 	}
 	
 	/***************************
+	*	Temp Unit
+	***************************/
+	
+	public function getTempUnit() {
+		return $this->tempUnit;
+	}
+	
+	public function setTempUnit($unit = 'C') {
+		$this->tempUnit = $unit;
+	}
+	
+	/***************************
 	*	Chance of Precipitation
 	***************************/
 	
@@ -95,6 +111,18 @@ class WeatherDTO {
 	
 	public function setPrecipType($type = null) {
 		$this->precipType = $type;
+	}
+	
+	/***************************
+	*	Precip Unit
+	***************************/
+	
+	public function getPrecipUnit() {
+		return $this->precipUnit;
+	}
+	
+	public function setPrecipUnit($unit = 'mm') {
+		$this->precipUnit = $unit;
 	}
 	
 	/***************************
