@@ -16,16 +16,14 @@
 
 abstract class WeatherScraper {
 
-	protected $weathermanager;			//	the manager object
 	protected $weathercollection;		//	a collection of DTOs
 	
 	//	children should override these:
 	protected $siteID = '';				//	your Site ID from the `weather_site` table in birdclub
-	protected $siteurl = '';			//	your URL to scrape
+	protected $siteURL = '';			//	your URL to scrape
 	
 	
-	public function __construct($weathermanager = null) {
-		$this->weathermanager = $weathermanager;
+	public function __construct() {
 		$this->weathercollection = new WeatherCollection();
 		date_default_timezone_set('America/Edmonton');
 	}
@@ -35,7 +33,7 @@ abstract class WeatherScraper {
 	}
 	
 	public function getSiteURL() {
-		return $this->siteurl;
+		return $this->siteURL;
 	}
 
 	public function getWeatherDTOCollection() {
