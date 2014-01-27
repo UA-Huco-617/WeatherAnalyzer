@@ -158,11 +158,7 @@ class WeatherDTO {
 	***************************/
 	
 	public function log($message = '') {
-		if (!empty($this->scraper)) {
-			$this->scraper->log($message);
-		} else {
-			echo $message . "\n";
-		}
+		if (!empty($message)) Logger::log($message);
 	}
 
 }
