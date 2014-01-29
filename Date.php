@@ -1,7 +1,7 @@
 <?php
 
 class Date {
-
+//Test comment
 	/************************************************
 	*	Date is a lightweight date formatting class;
 	*	you can set it with a string like 'Friday'
