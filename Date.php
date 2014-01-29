@@ -48,6 +48,10 @@ class Date {
 		return $this->month;
 	}
 	
+	public function getMonthName() {
+		return $this->months[$this->month];
+	}
+	
 	public function getYear() {
 		return $this->year;
 	}
@@ -56,6 +60,13 @@ class Date {
 	/************************************************
 	*			SETTERS
 	************************************************/
+	
+	public function advanceToNextMonth() {
+		$this->month++;
+		if ( $this->month > 12 ) $this->month -= 12;
+		//	set to Day 1
+		$this->day = 1;
+	}
 	
 	public function setDay($day) {
 		$day = (int) $day;
