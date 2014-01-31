@@ -1,0 +1,34 @@
+<?php
+
+//1. Grab all of the html
+$url = '';
+$html = file_get_contents('http://www.weatherforecastmap.com/canada/edmonton');
+
+
+//1.5, Remove all of the \n characters!
+
+$html = str_replace( "\n", ' ', $html);
+
+//2. get the table rows
+$thing= '<span class="climate" style="white-space:normal;text-align:center;align:center;padding-left:10px;font-size:14px;font-weight:normal;color:#4677B8">';
+
+$thing2 = '<td  valign="bottom" >';
+
+$row_regex ="/$thing(.*?)<\/span>/";
+preg_match_all($row_regex, $html, $row_match);
+
+print_r($row_match[1]);
+
+$html= str_replace("&nbsp;", '', $html);
+$html= str_replace("&deg;", '', $html);
+
+
+$row_regex ="/$thing2(.*?)<\/td>/";
+preg_match_all($row_regex, $html, $row_matches);
+
+
+//everything is in $row_mates[1]
+
+print_r($row_matches[1]);
+
+?>
