@@ -35,6 +35,10 @@ class Date {
 		return sprintf( '%04d-%02d-%02d', $this->year, $this->month, $this->day );
 	}
 	
+	public function getTodayAsSQL() {
+		return date('Y-m-d');
+	}
+	
 	public function getMonthDayYear() {
 		//	example: 5/10/2015
 		return $this->month . '/' . $this->day . '/' . $this->year;
