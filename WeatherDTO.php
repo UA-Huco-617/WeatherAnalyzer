@@ -13,9 +13,13 @@ class WeatherDTO {
 	protected $date;				//	forecast date
 	protected $hightemp;
 	protected $lowtemp;
-	protected $precipType;
-	protected $precipUnit = 'mm';	//	default value
+	protected $rainAmount;
+	protected $rainUnit = 'mm';		//	default value
 	protected $proseDescription;	//	i.e., 'partly cloudy'
+	protected $precipitation;
+	protected $precipUnit = 'mm';	// default unit
+	protected $snowAmount;
+	protected $snowUnit = 'cm';		//	default value
 	protected $tempUnit = 'C';		//	default value
 	
 	protected $scraper;				//	scraper that built this object
@@ -104,27 +108,78 @@ class WeatherDTO {
 	}
 	
 	/***************************
-	*	Precipitation Type(michael)
+	*	Precipitation
+	*	This might measure, for
+	*	example, the quantity
+	*	of moisture in snowfall.
 	***************************/
 	
-	public function getPrecipType() {
-		return $this->precipType;
+	public function getPrecipitation() {
+			return $this->precipitation;
 	}
 	
-	public function setPrecipType($type = null) {
-		$this->precipType = $type;
+	public function setPrecipitation($precip = 0) {
+			$this->precipitation = $precip;
 	}
 	
 	/***************************
 	*	Precip Unit
 	***************************/
 	
-	public function getPrecipUnit() {
-		return $this->precipUnit;
+	public function getPrecipitationUnit() {
+			return $this->precipUnit;
 	}
 	
-	public function setPrecipUnit($unit = 'mm') {
-		$this->precipUnit = $unit;
+	public function setPrecipitationUnit($unit = 'mm') {
+			$this->precipUnit = $unit;
+	}
+	
+	/***************************
+	*	Rain
+	***************************/
+	
+	public function getRainAmount() {
+		return $this->rainAmount;
+	}
+	
+	public function setRainAmount($rain = 0) {
+		$this->rainAmount = $rain;
+	}
+	
+	/***************************
+	*	Rain Unit
+	***************************/
+	
+	public function getRainUnit() {
+		return $this->rainUnit;
+	}
+	
+	public function setRainUnit($unit = 'mm') {
+		$this->rainUnit = $unit;
+	}
+	
+	/***************************
+	*	Snow
+	***************************/
+	
+	public function getSnowAmount() {
+		return $this->snowAmount;
+	}
+	
+	public function setSnowAmount($snow = 0) {
+		$this->snowAmount = $snow;
+	}
+	
+	/***************************
+	*	Snow Unit
+	***************************/
+	
+	public function getSnowUnit() {
+		return $this->snowUnit;
+	}
+	
+	public function setSnowUnit($unit = 'cm') {
+		$this->snowUnit = $unit;
 	}
 	
 	/***************************
