@@ -51,12 +51,16 @@ class WeatherDTO {
 	*	Date
 	***************************/
 	
-	public function getDate() {
+	public function getForecastDate() {
 		return $this->date->getDateAsSQL();
 	}
 	
-	public function setDate($string) {
+	public function setForecastDate($string) {
 		$this->date->setFromString($string);
+	}
+	
+	public function getTodayAsSQL() {
+		return $this->date->getTodayAsSQL();
 	}
 	
 	/***************************
