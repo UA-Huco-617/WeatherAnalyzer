@@ -47,6 +47,10 @@ abstract class WeatherScraper {
 		if (!empty($message)) Logger::log($message);
 	}
 	
+	public function cleanup($text = '') {
+		return str_replace("\n", ' ', $text);
+	}
+	
 	
 	/*************************************************
 	*	Abstract method for children to define
@@ -58,13 +62,12 @@ abstract class WeatherScraper {
 	//		$weatherdto = new WeatherDTO($this);
 	//	3. set the forecast date on the WeatherDTO
 	//		$weatherdto->setDate($some_string);
-	//		(we may modify class Date to help people do this)
+	//		(test your data with class Date to make sure it works)
 	//	4. collect data and push it into the WeatherDTO
 	//	5. add the WeatherDTO object to the collection
 	//		$this->weathercollection->addToCollection($weatherdto);
 	//	6. while still more days, go to step 1
-	//	if you determined that the scrape worked, return true;
-	//	else return false.
+	//	7. return count($this->weathercollection);
 	public abstract function scrape();
 
 
