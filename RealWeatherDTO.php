@@ -26,7 +26,7 @@ class RealWeatherDTO extends WeatherDTO {
 	}	
 
 	public function setCloudCover($percent = null) {
-		$this->cloudCover = (int) $percent;
+		$this->cloudCover = $percent;
 	}
 
 
