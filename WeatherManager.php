@@ -1,17 +1,16 @@
 <?php
 
-define('PATH_TO_SCRAPERS', '/Users/hquamen/Documents/Courses/Huco 617 - OOP (2014)/WeatherAnalyzer/Scraper');	//	put w/ autoload
-
 /**********************************************************************
 *        Huco 617.B2 (Winter 2014)
 *        WeatherManager is an managerial class that builds a series
 *        of web scrapers, instructs them to collect weather forecast 
-*        data and inserts it into a database.
+*        data and inserts it all into a database.
 **********************************************************************/
 
 class WeatherManager {
 
 	protected $scrapers = array();		//  collection of scrapers
+	protected $path_to_scrapers = __DIR__ . '/Scraper';
 
 	public function __construct() {
 		$this->loadScraperFiles();
@@ -34,7 +33,7 @@ class WeatherManager {
         
 	public function loadScraperFiles() {
 		//	require every file in directory X
-		foreach (new DirectoryIterator(PATH_TO_SCRAPERS) as $fileInfo) {
+		foreach (new DirectoryIterator($this->path_to_scrapers) as $fileInfo) {
     		if ($fileInfo->getExtension() == 'php') require_once $fileInfo->getPathname();
     	}
 	}
