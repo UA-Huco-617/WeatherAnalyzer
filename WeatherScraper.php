@@ -28,6 +28,10 @@ abstract class WeatherScraper {
 		date_default_timezone_set('America/Edmonton');
 	}
 	
+	public function addToCollection(WeatherDTO $dto = null) {
+		if (!empty($dto)) $this->weathercollection->addToCollection($dto);
+	}
+	
 	public function getSiteID() {
 		return $this->siteID;
 	}
@@ -65,7 +69,7 @@ abstract class WeatherScraper {
 	//		(test your data with class Date to make sure it works)
 	//	4. collect data and push it into the WeatherDTO
 	//	5. add the WeatherDTO object to the collection
-	//		$this->weathercollection->addToCollection($weatherdto);
+	//		$this->addToCollection($weatherdto);
 	//	6. while still more days, go to step 1
 	//	7. return count($this->weathercollection);
 	public abstract function scrape();
