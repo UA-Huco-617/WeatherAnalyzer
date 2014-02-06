@@ -1,22 +1,15 @@
 <?php
 
-class RealWeatherScraper extends WeatherScraper {
+class AirportWeatherScraper extends RealWeatherScraper {
 
-	protected $url = 'http://climate.weather.gc.ca/climateData/dailydata_e.html?StationID=';
+	protected $siteURL = 'http://climate.weather.gc.ca/climateData/dailydata_e.html?StationID=';
 	protected $stationID;
 	protected $cloudCoverURL = 'http://edmonton.weatherstats.ca/data/cloud_cover-2weeks.json';
-	protected $dto;
-	protected $yesterday;
-
 
 	public function __construct($weathermanager = null) {
 		parent::__construct( $weathermanager );
-		$this->yesterday = new Date('yesterday');
 		$urlparams = 'Year=' . $this->yesterday->getYear() . '&Month=' . $this->yesterday->getMonth();
-		$this->url .= $this->stationID . '&' . $urlparams;
-		$this->dto = new RealWeatherDTO($this);
-		$this->dto->setForecastDate($this->yesterday->getCanonicalDate());
-		$this->weathercollection->addToCollection($this->dto);
+		$this->siteURL .= $this->stationID . '&' . $urlparams;
 	}
 
 	public function scrape() {
@@ -28,7 +21,7 @@ class RealWeatherScraper extends WeatherScraper {
 	}
 	
 	public function scrapeEnvironmentCanada() {
-		$html = $this->cleanup( file_get_contents($this->url) );
+		$html = $this->cleanup( file_get_contents($this->siteURL) );
 		$success = true;
 		//	get the right string
 		$regex1 = "/title=\"" . $this->yesterday->getCanonicalDate() . "\">(.+?)<\/tr>/";
