@@ -10,9 +10,10 @@
 class WeatherManager {
 
 	protected $scrapers = array();		//  collection of scrapers
-	protected $path_to_scrapers = __DIR__ . '/Scraper';
+	protected $path_to_scrapers;
 
 	public function __construct() {
+		$this->path_to_scrapers = __DIR__ . '/Scraper';
 		$this->loadScraperFiles();
 		$this->instantiateScrapers();
 	}
