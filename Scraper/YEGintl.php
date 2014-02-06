@@ -1,6 +1,6 @@
 <?php
 
-class Scraper_YEGintl extends RealWeatherScraper {
+class Scraper_YEGintl extends AirportWeatherScraper {
 
 	//	This scraper pulls real, historical weather data
 	//	from the Edmonton International airport.
