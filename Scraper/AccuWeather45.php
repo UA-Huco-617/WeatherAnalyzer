@@ -140,7 +140,7 @@ class Scraper_AccuWeather45 extends WeatherScraper {
 		}
 		//	FORECAST
 		if (isset($m[1][4]) && !preg_match('/<td>&nbsp;<\/td>/',$m[1][4])) {
-			echo "Prose: |{$m[1][4]}|\n";
+			//echo "Prose: |{$m[1][4]}|\n";
 			list(,$prose) = explode('/>', $m[1][4]);
 			$prose = trim($prose);
 			$dto->setProseDescription($prose);
