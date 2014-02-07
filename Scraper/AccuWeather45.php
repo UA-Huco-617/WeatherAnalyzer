@@ -91,9 +91,12 @@ class Scraper_AccuWeather45 extends WeatherScraper {
 			//	out of data; set flag
 			$this->pageHasData = false;
 			return false;
-		} else {
-			return true;
 		}
+		//	an old weather day means we haven't gotten to good data yet
+		if ( preg_match('/class="pre">/', $html)) {
+			return false;
+		}
+		return true;
 	}
 	
 	public function buildDTO($html) {
@@ -137,6 +140,7 @@ class Scraper_AccuWeather45 extends WeatherScraper {
 		}
 		//	FORECAST
 		if (isset($m[1][4]) && !preg_match('/<td>&nbsp;<\/td>/',$m[1][4])) {
+			echo "Prose: |{$m[1][4]}|\n";
 			list(,$prose) = explode('/>', $m[1][4]);
 			$prose = trim($prose);
 			$dto->setProseDescription($prose);
