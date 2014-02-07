@@ -39,7 +39,7 @@ class AirportWeatherScraper extends RealWeatherScraper {
 	}
 	
 	public function scrapeCloudCover() {
-		$lines = file($this->cloudCoverURL);
+		$lines = $this->cleanup(file($this->cloudCoverURL));
 		$year = $this->yesterday->getYear();
 		$month = $this->yesterday->getMonth() - 1;	//	JavaScript counts months from zero
 		$day = $this->yesterday->getDay();
@@ -53,7 +53,9 @@ class AirportWeatherScraper extends RealWeatherScraper {
 	}
 	
 	public function validate($string) {
-		if ( empty($string) or preg_match('/[^-.0-9]/', $string) ) {
+		//	this should use is_null() because 0 (which is a legit value)
+		//	will make a false positive and this method will return NULL in that case.
+		if ( is_null($string) or preg_match('/[^-.0-9]/', $string) ) {
 			return null;
 		} else {
 			return trim($string);
