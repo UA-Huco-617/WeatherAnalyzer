@@ -33,7 +33,7 @@ class Database_DBMapperForecast extends Database_DBMapper {
 		$raw['precip_amount'] = $this->dto->getPrecipitation();
 		$raw['precip_unit'] = $this->dto->getPrecipitationUnit();
 		$raw['wind_speed'] = $this->dto->getWindSpeed();
-		$raw['wind_unit'] = $this->dto->getWindUnit();
+		$raw['wind_unit'] = $this->dto->getWindSpeedUnit();
 		$raw['wind_direction'] = $this->dto->getWindDirection();
 		$raw['prose_forecast'] = $this->dto->getProseDescription();
 		return $raw;
