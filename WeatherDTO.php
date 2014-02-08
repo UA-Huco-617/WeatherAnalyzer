@@ -21,6 +21,9 @@ class WeatherDTO {
 	protected $snowAmount;
 	protected $snowUnit = 'cm';		//	default value
 	protected $tempUnit = 'C';		//	default value
+	protected $windSpeed;
+	protected $windSpeedUnit;
+	protected $windDirection;
 	
 	protected $scraper;				//	scraper that built this object
 	protected $siteID;				//	scraper's site ID
@@ -198,6 +201,46 @@ class WeatherDTO {
 		$this->proseDescription = $desc;
 	}
 	
+	/***************************
+	*	Wind Speed
+	***************************/
+	
+	public function getWindSpeed() {
+		return $this->windSpeed;
+	}
+	
+	public function setWindSpeed($speed = null) {
+		$this->windSpeed = $speed;
+	}
+	
+	/***************************
+	*	Wind Speed Unit
+	***************************/
+	
+	public function getWindSpeedUnit() {
+		return $this->windSpeedUnit;
+	}
+	
+	public function setWindSpeed($unit = 'km/h') {
+		$this->windSpeedUnit = strtolower(str_replace(' ', '', $unit));
+	}
+	
+	/******************************************
+	*	Wind Direction
+	*	officially, this is a 360-degree
+	*	circle, but Environment Canada
+	*	divides the number by 10:
+	*	i.e., 23 = 230 degrees clockwise
+	*	from North
+	******************************************/
+	
+	public function getWindDirection() {
+		return $this->windDirection;
+	}
+	
+	public function setWindDirection($direction = null) {
+		//$this->windDirection = Database_WindDirection::normalize($direction);
+	}
 	
 	/***************************
 	*	Database Access
