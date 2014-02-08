@@ -21,7 +21,7 @@ class AirportWeatherScraper extends RealWeatherScraper {
 	}
 	
 	public function scrapeEnvironmentCanada() {
-		$html = $this->cleanup( file_get_contents($this->siteURL) );
+		$html = $this->cleanup(Utility_SecretAgent::getURL($this->siteURL));
 		$success = true;
 		//	get the right string
 		$regex1 = "/title=\"" . $this->yesterday->getCanonicalDate() . "\">(.+?)<\/tr>/";
