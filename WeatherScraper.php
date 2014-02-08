@@ -50,7 +50,7 @@ abstract class WeatherScraper {
 	//	you're free to log messages! We'll perhaps push them
 	//	to a webpage so everyone can read them.
 	public function log($message = null) {
-		if (!empty($message)) Logger::log($message);
+		if (!empty($message)) Utility_Logger::log($message);
 	}
 	
 	public function cleanup($text = '') {
