@@ -11,21 +11,23 @@
 *		• $siteurl ==> the URL this scraper collects data from
 *		• scrape() ==> function where the scraper does its stuff;
 *			you may or may not want to break this into sub-functions.
-*   This comment is very exciting.
+*
+*	NOTE: your HTML is loaded by the constructor and is in $this->html
 **********************************************************************/
 
 abstract class WeatherScraper {
 
 	protected $weathercollection;		//	a collection of DTOs
+	protected $html;
 	
 	//	children should override these:
 	protected $siteID = '';				//	your Site ID from the `weather_site` table in birdclub
 	protected $siteURL = '';			//	your URL to scrape
 	
-	
 	public function __construct() {
 		$this->weathercollection = new WeatherCollection();
 		date_default_timezone_set('America/Edmonton');
+		$this->html = $this->cleanup(Utility_SecretAgent::getURL($this->siteURL));
 	}
 	
 	public function addToCollection(WeatherDTO $dto = null) {
