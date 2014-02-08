@@ -24,7 +24,7 @@ class Database_DBMapperReal extends Database_DBMapper {
 		$raw['precip_unit'] = $this->dto->getPrecipitationUnit();
 		$raw['cloud_cover'] = $this->dto->getCloudCover();
 		$raw['wind_speed'] = $this->dto->getWindSpeed();
-		$raw['wind_unit'] = $this->dto->getWindUnit();
+		$raw['wind_unit'] = $this->dto->getWindSpeedUnit();
 		$raw['wind_direction'] = $this->dto->getWindDirection();
 		//$raw['prose_description'] = $this->dto->getProseDescription();
 		return $raw;
