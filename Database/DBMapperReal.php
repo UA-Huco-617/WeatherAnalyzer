@@ -7,7 +7,8 @@ class Database_DBMapperReal extends Database_DBMapper {
 	public function buildInsertQuery($clean) {
 		return "INSERT INTO {$this->table} VALUES (\N, {$clean['site_id']}, {$clean['date']}, 
 			{$clean['high']}, {$clean['high_unit']}, {$clean['low']}, {$clean['low_unit']}, 
-			{$clean['precip']}, {$clean['precip_unit']}, {$clean['cloud_cover']})";
+			{$clean['precip']}, {$clean['precip_unit']}, {$clean['cloud_cover']}, 
+			{$clean['wind_speed']}, {$clean['wind_unit']}, {$clean['wind_direction']})";
 	}
 	
 	public function getRawDTOData() {
@@ -22,6 +23,9 @@ class Database_DBMapperReal extends Database_DBMapper {
 		$raw['precip'] = $this->dto->getPrecipitation();
 		$raw['precip_unit'] = $this->dto->getPrecipitationUnit();
 		$raw['cloud_cover'] = $this->dto->getCloudCover();
+		$raw['wind_speed'] = $this->dto->getWindSpeed();
+		$raw['wind_unit'] = $this->dto->getWindUnit();
+		$raw['wind_direction'] = $this->dto->getWindDirection();
 		//$raw['prose_description'] = $this->dto->getProseDescription();
 		return $raw;
 	}

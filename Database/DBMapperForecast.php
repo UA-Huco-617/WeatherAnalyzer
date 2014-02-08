@@ -5,10 +5,12 @@ class Database_DBMapperForecast extends Database_DBMapper {
 	protected $table = 'weather_forecast';
 	
 	public function buildInsertQuery($clean) {
-		return "INSERT INTO {$this->table} VALUES (\N, {$clean['site_id']}, {$clean['scrape_date']}, {$clean['forecast_date']}, 
-			{$clean['high']}, {$clean['high_unit']}, {$clean['low']}, {$clean['low_unit']}, {$clean['rain_amount']}, {$clean['rain_unit']},  
+		return "INSERT INTO {$this->table} VALUES (\N, {$clean['site_id']}, 
+			{$clean['scrape_date']}, {$clean['forecast_date']}, {$clean['high']}, {$clean['high_unit']}, 
+			{$clean['low']}, {$clean['low_unit']}, {$clean['rain_amount']}, {$clean['rain_unit']}, 
 			{$clean['snow_amount']}, {$clean['snow_unit']}, {$clean['chance_of_precip']}, {$clean['precip_amount']}, 
-			{$clean['precip_unit']}, {$clean['prose_forecast']})";
+			{$clean['precip_unit']}, {$clean['wind_speed']}, {$clean['wind_unit']}, {$clean['wind_direction']} 
+			{$clean['prose_forecast']})";
 	}
 	
 	public function getRawDTOData() {
@@ -30,6 +32,9 @@ class Database_DBMapperForecast extends Database_DBMapper {
 		$raw['chance_of_precip'] = $this->dto->getChanceOfPrecip();
 		$raw['precip_amount'] = $this->dto->getPrecipitation();
 		$raw['precip_unit'] = $this->dto->getPrecipitationUnit();
+		$raw['wind_speed'] = $this->dto->getWindSpeed();
+		$raw['wind_unit'] = $this->dto->getWindUnit();
+		$raw['wind_direction'] = $this->dto->getWindDirection();
 		$raw['prose_forecast'] = $this->dto->getProseDescription();
 		return $raw;
 	}
