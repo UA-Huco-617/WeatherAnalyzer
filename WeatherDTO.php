@@ -239,7 +239,7 @@ class WeatherDTO {
 	}
 	
 	public function setWindDirection($direction = null) {
-		//$this->windDirection = Database_WindDirection::normalize($direction);
+		$this->windDirection = Utility_WindDirection::getDegrees($direction);
 	}
 	
 	/***************************
@@ -260,7 +260,7 @@ class WeatherDTO {
 	***************************/
 	
 	public function log($message = '') {
-		if (!empty($message)) Logger::log($message);
+		if (!empty($message)) Utility_Logger::log($message);
 	}
 
 }
