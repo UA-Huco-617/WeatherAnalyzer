@@ -9,7 +9,7 @@ class Database_DBMapperForecast extends Database_DBMapper {
 			{$clean['scrape_date']}, {$clean['forecast_date']}, {$clean['high']}, {$clean['high_unit']}, 
 			{$clean['low']}, {$clean['low_unit']}, {$clean['rain_amount']}, {$clean['rain_unit']}, 
 			{$clean['snow_amount']}, {$clean['snow_unit']}, {$clean['chance_of_precip']}, {$clean['precip_amount']}, 
-			{$clean['precip_unit']}, {$clean['wind_speed']}, {$clean['wind_unit']}, {$clean['wind_direction']} 
+			{$clean['precip_unit']}, {$clean['wind_speed']}, {$clean['wind_unit']}, {$clean['wind_direction']},  
 			{$clean['prose_forecast']})";
 	}
 	
