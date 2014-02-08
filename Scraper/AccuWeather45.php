@@ -14,7 +14,7 @@ class Scraper_AccuWeather45 extends WeatherScraper {
 	protected $pageHasData = true;	//	flag to keep scraping
 	
 	public function __construct() {
-		parent::__construct();
+		$this->weathercollection = new WeatherCollection();
 		$this->date = new Date();
 	}
 	
@@ -35,7 +35,7 @@ class Scraper_AccuWeather45 extends WeatherScraper {
 
 	public function scrapeMonthlyPage() {
 		$url = $this->buildURL();
-		$html = $this->cleanup(file_get_contents($url));
+		$html = $this->cleanup(Utility_SecretAgent::getURL($url));
 		$html = $this->extractFirstTable($html);	//	two tables on this page!
 		if (is_null($html)) {
 			Logger::log(__CLASS__ . " cannot find a table to parse on '{$url}'");
