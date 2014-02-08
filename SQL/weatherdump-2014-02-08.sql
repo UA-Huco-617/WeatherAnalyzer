@@ -127,7 +127,7 @@ CREATE TABLE `weather_agent` (
   `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
   `agent` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=38 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
