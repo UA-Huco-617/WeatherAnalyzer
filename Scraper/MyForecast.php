@@ -57,31 +57,22 @@ class Scraper_MyForecast extends WeatherScraper{
 
 	public function extractTodaysRow($html) {
 		$today = new Date('Today');
-		
+		//can't test...is this the correct way to get the date?
 		$date = $today->setYear(2014);
 		$date = $today->setMonthByName();
 		$date = $today->setDay();
-
-		$regex = '/<td align="left" valign="middle" bgcolor="#3366CC" class="wt">(.*?)<\/tr>/';
+		$date = $today->getCanonicalDate();
+		//again, cannot test at the moment...is $date in the correct place?
+		$regex = '/<td align="left" valign="middle" bgcolor="#3366CC" class="wt">'.$date.'(.*?)<\/tr>/';
 		preg_match($regex, $html, $matches);
-		return $matches[1];
+		//without testing, this should isolate today's row
+		return $matches[0];
 	}
 
 	public function setDTOFromRow($row) {
 		$dto = new WeatherDTO($this);
-		$regex = 
-
-	}
-
-//3. Get all rows
-
-$row_regex = '/<tr (.*?)<\/tr>/';
-
-preg_match_all($row_regex, $html, $row_matches);
-
-
-$cell_regex = '/<td align="center" valign="middle" class="normal">(.*?)<\/td>/';
-
+		$regex = '/<td align="center" valign="middle" class="normal">(.*?)<\/td>/';
+		preg_match_all($regex, $row, $matches);
 /*
 ************************
 * Data                 *
@@ -94,8 +85,45 @@ $cell_regex = '/<td align="center" valign="middle" class="normal">(.*?)<\/td>/';
 * UV Index [6]         *
 * Prob Precip [7]      *
 * 24 h precip total [8]*
-************************
+***********************/
 
+			$dto->setForecastDate('Today')
+			//without testing, this should isolate individual parts of above defined row 'today'
+			//having done that, not sure if I need [0][0]...or just [0]
+			
+			//prose
+			$dto->setProseDescription($matches[0][0]);
+
+			//high
+			$high = str_replace('&#176;', '', $matches[0][1]);
+			$dto->setHighTemp($high);
+			
+			//low
+			$low = str_replace('&#176', '' , $matches[0][2]);
+			$dto->setLowTemp($low);
+
+			//chanceprecip
+			$chanceprecip = str_replace('%', '', $matches[0][7]);
+			$dto->setChanceOfPrecip($chanceprecip);
+
+			//precipamount this is an issue - site gives cm when snow...but rain in same place?
+			$precipamount = str_replace('cm', '', $matches[0][8]);
+			$dto->setSnowAmount($precipamount);
+
+
+	}
+
+
+
+
+//3. Get all rows
+
+$row_regex = '/<tr (.*?)<\/tr>/';
+
+preg_match_all($row_regex, $html, $row_matches);
+
+
+$cell_regex = '/<td align="center" valign="middle" class="normal">(.*?)<\/td>/';
 
 /*
 These are the variables that Harvey has listed, so make the above match the exact terms - for my own ease of understanding!
@@ -117,17 +145,11 @@ These are the variables that Harvey has listed, so make the above match the exac
       protected $dbhelper;                //    DatabaseMapper object to handle I/O
 */
 
-*/
-
-//this is an attempt to isolate the dates for each forcast...need to figure out how to match to data...
-
-$date_regex = '/<td align="left" valign="middle" bgcolor="#3366CC" class="wt">(.*?)<\/td>/';
-
-preg_match_all($date_regex, $html, $date_matches);
 
 
-//ok, so I have the dates, now to find a way to match the data
-//lets try making each day a var
+
+
+
 /*
 *************************
 * DATES ($date_matches) *
@@ -147,19 +169,6 @@ preg_match_all($date_regex, $html, $date_matches);
 * Day 14 = [0][13]      *
 * Day 15 = [0][14]      *
 *************************
-
-*/ 
-
-
-//4. Get all table data
-
-foreach ( $row_matches[1] as $row) {
-	if (preg_match_all ($cell_regex, $row, $cell_matches ) ){
-		print_r($cell_matches[1]);
-		
- }
-}
-
 
 
 
