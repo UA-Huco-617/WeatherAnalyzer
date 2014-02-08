@@ -221,7 +221,7 @@ class WeatherDTO {
 		return $this->windSpeedUnit;
 	}
 	
-	public function setWindSpeed($unit = 'km/h') {
+	public function setWindSpeedUnit($unit = 'km/h') {
 		$this->windSpeedUnit = strtolower(str_replace(' ', '', $unit));
 	}
 	
