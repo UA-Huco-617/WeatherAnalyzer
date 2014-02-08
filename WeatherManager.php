@@ -40,21 +40,21 @@ class WeatherManager {
 	}
 	
 	public function log($message = null) {
-		if (!empty($message)) Logger::log($message);
+		if (!empty($message)) Utility_Logger::log($message);
 	}
     
 	public function run() {
 		$successful_scrapers = $records_saved = 0;
 		foreach ($this->scrapers as $scraper) {
 			if (!$scraper->scrape()) {
-				Logger::log( get_class($scraper) .' failed on Site ID ' . $scraper->getSiteID() );
+				Utility_Logger::log( get_class($scraper) .' failed on Site ID ' . $scraper->getSiteID() );
 				continue;
 			}
 			$successful_scrapers++;
 			$collection = $scraper->getWeatherDTOCollection();
 			$records_saved += $collection->saveToDatabase();
 		}
-		Logger::log("End run: {$successful_scrapers} scrapers saved {$records_saved} records into the database.");
+		Utility_Logger::log("End run: {$successful_scrapers} scrapers saved {$records_saved} records into the database.");
 	}
 }
 
