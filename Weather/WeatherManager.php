@@ -13,13 +13,23 @@ class Weather_WeatherManager {
 	protected $path_to_scrapers;
 
 	public function __construct() {
-		$this->path_to_scrapers = __DIR__ . '/Scraper';
+		$this->path_to_scrapers = $this->get_URL_up_a_directory() . 'Scraper';
+		Utility_Logger::log('Attempting to load scrapers from ' . $this->path_to_scrapers );
 		$this->loadScraperFiles();
 		$this->instantiateScrapers();
 	}
         
 	public function addScraper(Weather_WeatherScraper $scraper) {
 		$this->scrapers[] = $scraper;
+	}
+	
+	function get_URL_up_a_directory($url = __DIR__) {
+		//	if URL ends in a slash, remove it to move up properly
+		if ( substr( $url, strlen($url) - 1 ) ==  '/' ) $url = substr( $url, 0, strlen($url) - 1 );
+		$last_slash = strripos( $url, '/' );
+		$up = substr( $url, 0, $last_slash + 1 );
+		$down = substr( $url, $last_slash + 1 );
+		return $up;
 	}
 	
 	public function instantiateScrapers() {

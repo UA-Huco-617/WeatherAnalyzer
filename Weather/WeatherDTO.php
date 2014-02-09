@@ -1,6 +1,6 @@
 <?php
 
-class WeatherDTO {
+class Weather_WeatherDTO {
 
 	/**********************************************************************
 	*	Huco 617.B2 (Winter 2014)
@@ -31,8 +31,8 @@ class WeatherDTO {
 	protected $siteID;				//	scraper's site ID
 	protected $dbhelper;			//	DatabaseMapper object to handle I/O
 	
-	public function __construct(WeatherScraper $scraper = null) {
-		$this->date = new Date();
+	public function __construct(Weather_WeatherScraper $scraper = null) {
+		$this->date = new Utility_Date();
 		if (!empty($scraper)) {
 			$this->scraper = $scraper;
 			$this->siteID = $this->scraper->getSiteID();	// method guaranteed by WeatherScraper class

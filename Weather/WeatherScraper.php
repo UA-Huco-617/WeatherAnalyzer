@@ -15,7 +15,7 @@
 *	NOTE: your HTML is loaded by the constructor and is in $this->html
 **********************************************************************/
 
-abstract class WeatherScraper {
+abstract class Weather_WeatherScraper {
 
 	protected $weathercollection;		//	a collection of DTOs
 	protected $html;

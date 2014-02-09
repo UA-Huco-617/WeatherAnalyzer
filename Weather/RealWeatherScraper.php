@@ -1,6 +1,6 @@
 <?php
 
-abstract class RealWeatherScraper extends WeatherScraper {
+abstract class Weather_RealWeatherScraper extends Weather_WeatherScraper {
 
 	protected $dto;
 	protected $yesterday;
