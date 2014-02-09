@@ -1,6 +1,6 @@
 <?php
 
-class Scraper_ToryScraper extends RealWeatherScraper {
+class Scraper_ToryScraper extends Weather_RealWeatherScraper {
 
 	protected $siteID = 8;		//	Site ID from birdclub database
 	protected $siteURL = 'http://easweb.eas.ualberta.ca/weather_archive.php';

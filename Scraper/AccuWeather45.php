@@ -1,6 +1,6 @@
 <?php
 
-class Scraper_AccuWeather45 extends WeatherScraper {
+class Scraper_AccuWeather45 extends Weather_WeatherScraper {
 	
 	//	This scraper picks up 45 days of forecasts, so needs to do multiple
 	//	URL requests until it runs out of data to scrape. Example URLs:
@@ -14,8 +14,8 @@ class Scraper_AccuWeather45 extends WeatherScraper {
 	protected $pageHasData = true;	//	flag to keep scraping
 	
 	public function __construct() {
-		$this->weathercollection = new WeatherCollection();
-		$this->date = new Date();
+		$this->weathercollection = new Weather_WeatherCollection();
+		$this->date = new Utility_Date();
 	}
 	
 	public function scrape() {
@@ -114,7 +114,7 @@ class Scraper_AccuWeather45 extends WeatherScraper {
 		******************************************************************/
 		if (stripos($html, "\n") !== false ) $html = $this->cleanup($html);
 		if ( !$this->haveValidRow($html)) return null;
-		$dto = new WeatherDTO($this);
+		$dto = new Weather_WeatherDTO($this);
 		$regex = '/<td(?:.*?)>(.+?)<\/td>/';
 		preg_match_all($regex, $html, $m);
 		//	HIGH
