@@ -8,7 +8,8 @@ class Database_DBMapperReal extends Database_DBMapper {
 		return "INSERT INTO {$this->table} VALUES (\N, {$clean['site_id']}, {$clean['date']}, 
 			{$clean['high']}, {$clean['high_unit']}, {$clean['low']}, {$clean['low_unit']}, 
 			{$clean['precip']}, {$clean['precip_unit']}, {$clean['cloud_cover']}, 
-			{$clean['wind_speed']}, {$clean['wind_unit']}, {$clean['wind_direction']})";
+			{$clean['wind_speed']}, {$clean['wind_unit']}, {$clean['wind_direction']}, 
+			{$clean['pressure']}, {$clean['humidity']})";
 	}
 	
 	public function getRawDTOData() {
@@ -26,6 +27,8 @@ class Database_DBMapperReal extends Database_DBMapper {
 		$raw['wind_speed'] = $this->dto->getWindSpeed();
 		$raw['wind_unit'] = $this->dto->getWindSpeedUnit();
 		$raw['wind_direction'] = $this->dto->getWindDirection();
+		$raw['pressure'] = $this->dto->getPressure();
+		$raw['humidity'] = $this->dto->getHumidity();
 		//$raw['prose_description'] = $this->dto->getProseDescription();
 		return $raw;
 	}
