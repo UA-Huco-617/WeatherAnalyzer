@@ -12,12 +12,14 @@ class WeatherDTO {
 	protected $chanceprecip;
 	protected $date;				//	forecast date
 	protected $hightemp;
+	protected $humidity;
 	protected $lowtemp;
 	protected $rainAmount;
 	protected $rainUnit = 'mm';		//	default value
 	protected $proseDescription;	//	i.e., 'partly cloudy'
 	protected $precipitation;
 	protected $precipUnit = 'mm';	// default unit
+	protected $pressure;
 	protected $snowAmount;
 	protected $snowUnit = 'cm';		//	default value
 	protected $tempUnit = 'C';		//	default value
@@ -64,6 +66,18 @@ class WeatherDTO {
 	
 	public function getTodayAsSQL() {
 		return $this->date->getTodayAsSQL();
+	}
+	
+	/***************************
+	*	Humidity
+	***************************/
+	
+	public function getHumidity() {
+		return $this->humidity;
+	}
+	
+	public function setHumidity($humidity = null) {
+		$this->humidity = $humidity;
 	}
 	
 	/***************************
@@ -190,6 +204,18 @@ class WeatherDTO {
 	}
 	
 	/***************************
+	*	Barometric Pressure
+	***************************/
+	
+	public function getPressure() {
+		return $this->pressure;
+	}
+	
+	public function setPressure($pressure = null) {
+		$this->pressure = $pressure;
+	}
+	
+	/***************************
 	*	Prose Description
 	***************************/
 
@@ -256,7 +282,6 @@ class WeatherDTO {
 	
 	/***************************
 	*	Logfile Access
-	*	(push this up to Scraper)
 	***************************/
 	
 	public function log($message = '') {
