@@ -22,7 +22,7 @@ class AirportWeatherScraper extends RealWeatherScraper {
 
 	public function scrape() {
 		if ( $this->scrapeEnvironmentCanada() and $this->scrapeCloudCover()
-			and $this->scrapeWind()) {
+			and $this->scrapeHourly()) {
 			return count($this->weathercollection);
 		} else {
 			return false;
@@ -48,28 +48,33 @@ class AirportWeatherScraper extends RealWeatherScraper {
 	}
 	
 	public function scrapeCloudCover() {
-		$lines = $this->cleanup(file($this->cloudCoverURL));
+		$lines = $this->cleanup(Utility_SecretAgent::getURL($this->cloudCoverURL));
 		$year = $this->yesterday->getYear();
 		$month = $this->yesterday->getMonth() - 1;	//	JavaScript counts months from zero
 		$day = $this->yesterday->getDay();
 		$regex = "/new Date\( $year, $month, $day" . ' \)},{"v":(?:\d+)},{"v":(\d+)},{"v":(?:\d+)}/';
-		if ( preg_match( $regex, $lines[0], $matches ) ) {
+		if ( preg_match( $regex, $lines, $matches ) ) {
 			$this->dto->setCloudCover($this->validate($matches[1]));
 			return true;
 		} else {
+			Utility_Logger::log(__METHOD__ . ' failing.');
 			return false;
 		}
 	}
 	
-	public function scrapeWind() {
+	public function scrapeHourly() {
 		// average this from the hourly update
 		$this->buildHourlyURL();
 		$html = $this->cleanup(Utility_SecretAgent::getURL($this->hourlyURL));
 		if (empty($html)) {
-			Utility_Logger::log(__CLASS__ . 'cannot load Hourly page for station ID ' . $this->stationID);
+			Utility_Logger::log(__METHOD__ . 'cannot load Hourly page for station ID ' . $this->stationID);
 			return false;
 		}
 		$rows = $this->getHourlyRows($html);
+		if (!$rows) {
+			Utility_Logger::log(__METHOD__ . ' cannot parse rows from HTML. Failing.');
+			return false;
+		}
 		$windSpeed = $this->getWindSpeed($rows);
 		$this->dto->setWindSpeed($windSpeed);
 		$this->dto->setWindSpeedUnit('km/h'); // yeah, hard-coded, but it's EnviroCan!
@@ -79,6 +84,7 @@ class AirportWeatherScraper extends RealWeatherScraper {
 		$this->dto->setPressure($pressure);
 		$humidity = $this->getHumidity($rows);
 		$this->dto->setHumidity($humidity);
+		return true;
 	}
 	
 	public function buildHourlyURL() {
@@ -91,18 +97,18 @@ class AirportWeatherScraper extends RealWeatherScraper {
 		$clean_rows = array();
 		$table_regex = '/<tr>\s*<th>TIME\s*<\/th>(.+?)<\/table>/';
 		if (!preg_match($table_regex, $html, $table)) {
-			Utility_Logger::log(__CLASS__ . ': Hourly Table regex didn\'t match');
+			Utility_Logger::log(__METHOD__ . ': Hourly Table regex didn\'t match');
 			return null;
 		}
 		$row_regex = '/<tr>(.+?)<\/tr>/';
 		if (!preg_match_all($row_regex, $table[1], $rows)) {
-			Utility_Logger::log(__CLASS__ . ': Hourly Row regex didn\'t match');
+			Utility_Logger::log(__METHOD__ . ': Hourly Row regex didn\'t match');
 			return null;
 		}
 		$cell_regex = '/<td\s*>(.*?)<\/td>/';
 		foreach ($rows[1] as $row) {
 			if (!preg_match_all($cell_regex, $row, $cells)) {
-				Utility_Logger::log(__CLASS__ . ': Hourly Cell regex didn\'t match');
+				Utility_Logger::log(__METHOD__ . ': Hourly Cell regex didn\'t match');
 				return null;
 			}
 			$clean_rows[] = $cells[1];
