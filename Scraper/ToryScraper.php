@@ -12,9 +12,8 @@ class Scraper_ToryScraper extends Weather_RealWeatherScraper {
 		//	4. constructor already added the WeatherDTO object to the collection
 		//	5. return count($this->weathercollection);
 		
-		$html = file_get_contents( $this->siteURL );
-		$html = $this->cleanup($html);
-		$row = $this->extractYesterdaysRow($html);
+		$this->html = $this->cleanup(Utility_SecretAgent::getURL($this->siteURL));
+		$row = $this->extractYesterdaysRow($this->html);
 		$this->setDTOFromRow($row);
 		return count($this->weathercollection);
 	}
