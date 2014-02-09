@@ -5,9 +5,9 @@
 //*****************************************************************
 
 define('HOST', 'localhost');
-define ('USER', 'hquamen');
-define ('PWD', 'viking1');
-define ('DB', 'weather');
+define ('USER', '');
+define ('PWD', '');
+define ('DB', '');
 
 class Database_DBConn {
 
