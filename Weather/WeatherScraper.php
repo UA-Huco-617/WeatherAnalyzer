@@ -25,12 +25,12 @@ abstract class WeatherScraper {
 	protected $siteURL = '';			//	your URL to scrape
 	
 	public function __construct() {
-		$this->weathercollection = new WeatherCollection();
+		$this->weathercollection = new Weather_WeatherCollection();
 		date_default_timezone_set('America/Edmonton');
 		$this->html = $this->cleanup(Utility_SecretAgent::getURL($this->siteURL));
 	}
 	
-	public function addToCollection(WeatherDTO $dto = null) {
+	public function addToCollection(Weather_WeatherDTO $dto = null) {
 		if (!empty($dto)) $this->weathercollection->addToCollection($dto);
 	}
 	
@@ -64,8 +64,8 @@ abstract class WeatherScraper {
 	
 	//	scrape() should do the following.
 	//	1. for each day's forecast:
-	//	2. build a new WeatherDTO object:
-	//		$weatherdto = new WeatherDTO($this);
+	//	2. build a new Weather_WeatherDTO object:
+	//		$weatherdto = new Weather_WeatherDTO($this);
 	//	3. set the forecast date on the WeatherDTO
 	//		$weatherdto->setDate($some_string);
 	//		(test your data with class Date to make sure it works)

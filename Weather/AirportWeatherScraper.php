@@ -1,6 +1,6 @@
 <?php
 
-class AirportWeatherScraper extends RealWeatherScraper {
+class Weather_AirportWeatherScraper extends Weather_RealWeatherScraper {
 
 	protected $siteURL = 'http://climate.weather.gc.ca/climateData/dailydata_e.html?StationID=';
 	protected $hourlyURL = 'http://climate.weather.gc.ca/climateData/hourlydata_e.html?StationID=';

@@ -1,11 +1,11 @@
 <?php
 
-class WeatherCollection implements Iterator, Countable {
+class Weather_WeatherCollection implements Iterator, Countable {
 
 	protected $collection = array();
 	protected $pointer = 0;				//	for Iterator
 
-	public function addToCollection($weatherdto) {
+	public function addToCollection(Weather_WeatherDTO $weatherdto) {
 		$this->collection[] = $weatherdto;
 	}
 	

@@ -7,7 +7,7 @@
 *        data and inserts it all into a database.
 **********************************************************************/
 
-class WeatherManager {
+class Weather_WeatherManager {
 
 	protected $scrapers = array();		//  collection of scrapers
 	protected $path_to_scrapers;
@@ -18,12 +18,12 @@ class WeatherManager {
 		$this->instantiateScrapers();
 	}
         
-	public function addScraper(WeatherScraper $scraper) {
+	public function addScraper(Weather_WeatherScraper $scraper) {
 		$this->scrapers[] = $scraper;
 	}
 	
 	public function instantiateScrapers() {
-		$classes = array_filter( get_declared_classes(), array('WeatherManager', 'is_scraper') );
+		$classes = array_filter( get_declared_classes(), array('Weather_WeatherManager', 'is_scraper') );
 		foreach ($classes as $scraper) $this->scrapers[] = new $scraper($this);
 	}
 	
