@@ -1,6 +1,6 @@
 <?php
 
-class Logger {
+class Utility_Logger {
 
 	const LOGFILE = 'weather.log';
 	
