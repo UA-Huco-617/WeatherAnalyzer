@@ -4,10 +4,10 @@
 //	Database Configuration
 //*****************************************************************
 
-define('HOST', '');
-define ('USER', '');
-define ('PWD', '');
-define ('DB', '');
+define('HOST', 'localhost');
+define ('USER', 'hquamen');
+define ('PWD', 'viking1');
+define ('DB', 'weather');
 
 class Database_DBConn {
 

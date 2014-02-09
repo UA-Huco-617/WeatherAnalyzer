@@ -7,7 +7,7 @@ abstract class Database_DBMapper {
 	protected $columnType = array();
 	protected $table;	//	children should set this
 	
-	public function __construct(WeatherDTO $dto = null) {
+	public function __construct(Weather_WeatherDTO $dto = null) {
 		$this->dbconn = Database_DBConn::getConnection();
 		$this->dto = $dto;
 		$this->loadColumnMetadata();
@@ -55,7 +55,7 @@ abstract class Database_DBMapper {
 		$query = $this->buildSaveQuery();
 		$this->dbconn->query($query);
 		if ($this->dbconn->affected_rows != 1) {
-			$this->dto->log('Database error: ' . $this->dbconn->errno . ':: ' . $this->dbconn->error );
+			Utility_Logger::log('Database error: ' . $this->dbconn->errno . ':: ' . $this->dbconn->error );
 			return false;
 		}
 		return true;
