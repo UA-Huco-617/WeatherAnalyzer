@@ -20,6 +20,7 @@ class Weather_WeatherDTO {
 	protected $precipitation;
 	protected $precipUnit = 'mm';	// default unit
 	protected $pressure;
+	protected $pressureUnit;
 	protected $snowAmount;
 	protected $snowUnit = 'cm';		//	default value
 	protected $tempUnit = 'C';		//	default value
@@ -213,6 +214,18 @@ class Weather_WeatherDTO {
 	
 	public function setPressure($pressure = null) {
 		$this->pressure = $pressure;
+	}
+	
+	/***************************
+	*	Pressure Unit
+	***************************/
+	
+	public function getPressureUnit() {
+		return $this->pressureUnit;
+	}
+	
+	public function setPressureUnit($unit = 'kPa') {
+		$this->pressureUnit = $unit;
 	}
 	
 	/***************************
