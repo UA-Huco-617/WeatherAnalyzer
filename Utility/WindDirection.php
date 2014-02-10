@@ -20,6 +20,24 @@ class Utility_WindDirection {
 		array('abbrev' => 'NW', 'direction' => 'Northwest', 'degree' => 315),
 		array('abbrev' => 'NNW', 'direction' => 'North-northwest', 'degree' => 337.5)
 	);
+	
+	public function getAverageWindDirection($rows) {
+		//	Use trig -- convert to (x,y) points on the unit circle
+		//	and average, then find the arctangent of the averaged point.
+		$sum_x = $sum_y = 0;
+		$count = count($rows);
+		foreach ($rows as $direction) {
+			$sum_x += cos(deg2rad($direction));
+			$sum_y += sin(deg2rad($direction));
+		}
+		$avg_x = $sum_x / $count;
+		$avg_y = $sum_y / $count;
+		$angle = rad2deg(atan($avg_y / $avg_x));
+		if ($angle < 0) $angle += 360;
+		if ($angle > 360) $angle =- 360;
+		if ($angle == 360) $angle = 0;
+		return round($angle);
+	}
 
 	public static function getDirection($degree) {
 		//	each unit is 22.5 degrees;
