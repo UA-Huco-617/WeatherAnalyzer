@@ -1,6 +1,6 @@
 <?php
 
-class Scraper_MyForecast extends WeatherScraper{
+class Scraper_MyForecast extends Weather_WeatherScraper{
 	
 	protected $siteID = 6;				
 	protected $siteURL = 'http://www.myforecast.com/bin/expanded_forecast_15day.m?city=54149&metric=true';
@@ -9,7 +9,7 @@ class Scraper_MyForecast extends WeatherScraper{
 	
 	public function __construct() {
 		parent::__construct();
-		$this->date = new Date();
+		$this->date = new Utility_Date();
 	}
 
 	public function __construct() {
@@ -47,10 +47,7 @@ class Scraper_MyForecast extends WeatherScraper{
 	//remember to do the top-down narrative thing...every function followed by next level of abstractions
 
 	public function scrape() {
-		$html = file_get_contents($this->$siteURL);
-		$html = $this->cleanup($html);
-		//can I make a function that will set each day as a separate row to then convert to dto?
-		//or do I need to do a separate command here for each day?
+
 		$row = $this->extractTodaysRow($html);
 		$dto = $this->setDTOFromRow($row);
 		$this->addToCollection($dto);
@@ -65,7 +62,7 @@ class Scraper_MyForecast extends WeatherScraper{
 //Day 1 - Today
 
 	public function extractTodaysRow($html) {
-		$today = new Date('Today');
+		$today = new Utility_Date('Today');
 		//can't test...is this the correct way to get the date?
 		$date = $today->setYear(2014);
 		$date = $today->setMonthByName();
