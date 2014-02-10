@@ -34,8 +34,7 @@ class Utility_WindDirection {
 		$avg_y = $sum_y / $count;
 		$angle = rad2deg(atan($avg_y / $avg_x));
 		if ($angle < 0) $angle += 360;
-		if ($angle > 360) $angle =- 360;
-		if ($angle == 360) $angle = 0;
+		if ($angle >= 360) $angle -= 360;
 		return round($angle);
 	}
 
