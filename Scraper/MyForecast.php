@@ -63,11 +63,7 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 
 	public function extractTodaysRow($html) {
 		$today = new Utility_Date('Today');
-		//can't test...is this the correct way to get the date?
-		$date = $today->setYear(2014);
-		$date = $today->setMonthByName();
-		$date = $today->setDay();
-		$date = $today->getCanonicalDate();
+		//got rid of previous individual date functions....is this all I need?
 		//again, cannot test at the moment...is $date in the correct place?
 		$regex = '/<td align="left" valign="middle" bgcolor="#3366CC" class="wt">'.$date.'(.*?)<\/tr>/';
 		preg_match($regex, $html, $matches);
@@ -92,7 +88,7 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 * Prob Precip [7]      *
 * 24 h precip total [8]*
 ***********************/
-
+			//so this should be changed to $dto->setForecastDate($date-databit); ???????
 			$dto->setForecastDate('Today');
 			//without testing, this should isolate individual parts of above defined row 'today'
 			//having done that, not sure if I need [0][0]...or just [0]
