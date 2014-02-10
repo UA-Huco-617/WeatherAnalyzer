@@ -115,8 +115,14 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 			return $dto;
 
 	}
+		//So, if the above works the way I want it, I need a 'foreach'... 
+		//This depends on the array feedback working so that array [0] = today, array [14] = day 15...
+		//In that case, how do I set it up so that the foreach loop will change the array that it accesses while maintaining that the $high is always $matches _ [1]?
+		//My problem is that when it returns arrays, each day's worth of data comes back as array (array=> [0]...blah blah blah)
 
-//Day 2
+
+
+/*
 
 	public function extractDay2Row($html) {
 		$today = new Date('Day2');
@@ -148,7 +154,7 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 * UV Index [6]         *
 * Prob Precip [7]      *
 * 24 h precip total [8]*
-***********************/
+***********************
 
 			$dto->setForecastDate('Day2');
 			//without testing, this should isolate individual parts of above defined row 'Day2'
@@ -176,7 +182,7 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 			return $dto;
 
 	}
-
+*/
 
 /*  NEED THIS SOMEWHERE...???
 
