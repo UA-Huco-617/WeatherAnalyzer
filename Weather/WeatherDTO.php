@@ -1,6 +1,6 @@
 <?php
 
-class WeatherDTO {
+class Weather_WeatherDTO {
 
 	/**********************************************************************
 	*	Huco 617.B2 (Winter 2014)
@@ -12,22 +12,28 @@ class WeatherDTO {
 	protected $chanceprecip;
 	protected $date;				//	forecast date
 	protected $hightemp;
+	protected $humidity;
 	protected $lowtemp;
 	protected $rainAmount;
 	protected $rainUnit = 'mm';		//	default value
 	protected $proseDescription;	//	i.e., 'partly cloudy'
 	protected $precipitation;
 	protected $precipUnit = 'mm';	// default unit
+	protected $pressure;
+	protected $pressureUnit;
 	protected $snowAmount;
 	protected $snowUnit = 'cm';		//	default value
 	protected $tempUnit = 'C';		//	default value
+	protected $windSpeed;
+	protected $windSpeedUnit;
+	protected $windDirection;
 	
 	protected $scraper;				//	scraper that built this object
 	protected $siteID;				//	scraper's site ID
 	protected $dbhelper;			//	DatabaseMapper object to handle I/O
 	
-	public function __construct(WeatherScraper $scraper = null) {
-		$this->date = new Date();
+	public function __construct(Weather_WeatherScraper $scraper = null) {
+		$this->date = new Utility_Date();
 		if (!empty($scraper)) {
 			$this->scraper = $scraper;
 			$this->siteID = $this->scraper->getSiteID();	// method guaranteed by WeatherScraper class
@@ -61,6 +67,18 @@ class WeatherDTO {
 	
 	public function getTodayAsSQL() {
 		return $this->date->getTodayAsSQL();
+	}
+	
+	/***************************
+	*	Humidity
+	***************************/
+	
+	public function getHumidity() {
+		return $this->humidity;
+	}
+	
+	public function setHumidity($humidity = null) {
+		$this->humidity = $humidity;
 	}
 	
 	/***************************
@@ -187,6 +205,30 @@ class WeatherDTO {
 	}
 	
 	/***************************
+	*	Barometric Pressure
+	***************************/
+	
+	public function getPressure() {
+		return $this->pressure;
+	}
+	
+	public function setPressure($pressure = null) {
+		$this->pressure = $pressure;
+	}
+	
+	/***************************
+	*	Pressure Unit
+	***************************/
+	
+	public function getPressureUnit() {
+		return $this->pressureUnit;
+	}
+	
+	public function setPressureUnit($unit = 'kPa') {
+		$this->pressureUnit = $unit;
+	}
+	
+	/***************************
 	*	Prose Description
 	***************************/
 
@@ -198,6 +240,46 @@ class WeatherDTO {
 		$this->proseDescription = $desc;
 	}
 	
+	/***************************
+	*	Wind Speed
+	***************************/
+	
+	public function getWindSpeed() {
+		return $this->windSpeed;
+	}
+	
+	public function setWindSpeed($speed = null) {
+		$this->windSpeed = $speed;
+	}
+	
+	/***************************
+	*	Wind Speed Unit
+	***************************/
+	
+	public function getWindSpeedUnit() {
+		return $this->windSpeedUnit;
+	}
+	
+	public function setWindSpeedUnit($unit = 'km/h') {
+		$this->windSpeedUnit = strtolower(str_replace(' ', '', $unit));
+	}
+	
+	/******************************************
+	*	Wind Direction
+	*	officially, this is a 360-degree
+	*	circle, but Environment Canada
+	*	divides the number by 10:
+	*	i.e., 23 = 230 degrees clockwise
+	*	from North
+	******************************************/
+	
+	public function getWindDirection() {
+		return $this->windDirection;
+	}
+	
+	public function setWindDirection($direction = null) {
+		$this->windDirection = Utility_WindDirection::getDegrees($direction);
+	}
 	
 	/***************************
 	*	Database Access
@@ -213,11 +295,10 @@ class WeatherDTO {
 	
 	/***************************
 	*	Logfile Access
-	*	(push this up to Scraper)
 	***************************/
 	
 	public function log($message = '') {
-		if (!empty($message)) Logger::log($message);
+		if (!empty($message)) Utility_Logger::log($message);
 	}
 
 }

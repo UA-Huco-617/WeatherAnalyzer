@@ -4,7 +4,7 @@
 //	Database Configuration
 //*****************************************************************
 
-define('HOST', '');
+define('HOST', 'localhost');
 define ('USER', '');
 define ('PWD', '');
 define ('DB', '');

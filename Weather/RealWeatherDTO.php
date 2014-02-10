@@ -1,6 +1,6 @@
 <?php
 
-class RealWeatherDTO extends WeatherDTO {
+class Weather_RealWeatherDTO extends Weather_WeatherDTO {
 
 	protected $actualprecip;
 	protected $cloudCover;

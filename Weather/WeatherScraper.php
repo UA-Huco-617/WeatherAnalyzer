@@ -11,24 +11,26 @@
 *		• $siteurl ==> the URL this scraper collects data from
 *		• scrape() ==> function where the scraper does its stuff;
 *			you may or may not want to break this into sub-functions.
-*   This comment is very exciting.
+*
+*	NOTE: your HTML is loaded by the constructor and is in $this->html
 **********************************************************************/
 
-abstract class WeatherScraper {
+abstract class Weather_WeatherScraper {
 
 	protected $weathercollection;		//	a collection of DTOs
+	protected $html;
 	
 	//	children should override these:
 	protected $siteID = '';				//	your Site ID from the `weather_site` table in birdclub
 	protected $siteURL = '';			//	your URL to scrape
 	
-	
 	public function __construct() {
-		$this->weathercollection = new WeatherCollection();
+		$this->weathercollection = new Weather_WeatherCollection();
 		date_default_timezone_set('America/Edmonton');
+		$this->html = $this->cleanup(Utility_SecretAgent::getURL($this->siteURL));
 	}
 	
-	public function addToCollection(WeatherDTO $dto = null) {
+	public function addToCollection(Weather_WeatherDTO $dto = null) {
 		if (!empty($dto)) $this->weathercollection->addToCollection($dto);
 	}
 	
@@ -48,7 +50,7 @@ abstract class WeatherScraper {
 	//	you're free to log messages! We'll perhaps push them
 	//	to a webpage so everyone can read them.
 	public function log($message = null) {
-		if (!empty($message)) Logger::log($message);
+		if (!empty($message)) Utility_Logger::log($message);
 	}
 	
 	public function cleanup($text = '') {
@@ -62,8 +64,8 @@ abstract class WeatherScraper {
 	
 	//	scrape() should do the following.
 	//	1. for each day's forecast:
-	//	2. build a new WeatherDTO object:
-	//		$weatherdto = new WeatherDTO($this);
+	//	2. build a new Weather_WeatherDTO object:
+	//		$weatherdto = new Weather_WeatherDTO($this);
 	//	3. set the forecast date on the WeatherDTO
 	//		$weatherdto->setDate($some_string);
 	//		(test your data with class Date to make sure it works)

@@ -1,6 +1,6 @@
 <?php
 
-class Date {
+class Utility_Date {
 
 	/************************************************
 	*	Date is a lightweight date formatting class;

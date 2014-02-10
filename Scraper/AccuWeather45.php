@@ -1,6 +1,6 @@
 <?php
 
-class Scraper_AccuWeather45 extends WeatherScraper {
+class Scraper_AccuWeather45 extends Weather_WeatherScraper {
 	
 	//	This scraper picks up 45 days of forecasts, so needs to do multiple
 	//	URL requests until it runs out of data to scrape. Example URLs:
@@ -14,8 +14,8 @@ class Scraper_AccuWeather45 extends WeatherScraper {
 	protected $pageHasData = true;	//	flag to keep scraping
 	
 	public function __construct() {
-		parent::__construct();
-		$this->date = new Date();
+		$this->weathercollection = new Weather_WeatherCollection();
+		$this->date = new Utility_Date();
 	}
 	
 	public function scrape() {
@@ -35,7 +35,7 @@ class Scraper_AccuWeather45 extends WeatherScraper {
 
 	public function scrapeMonthlyPage() {
 		$url = $this->buildURL();
-		$html = $this->cleanup(file_get_contents($url));
+		$html = $this->cleanup(Utility_SecretAgent::getURL($url));
 		$html = $this->extractFirstTable($html);	//	two tables on this page!
 		if (is_null($html)) {
 			Logger::log(__CLASS__ . " cannot find a table to parse on '{$url}'");
@@ -91,9 +91,12 @@ class Scraper_AccuWeather45 extends WeatherScraper {
 			//	out of data; set flag
 			$this->pageHasData = false;
 			return false;
-		} else {
-			return true;
 		}
+		//	an old weather day means we haven't gotten to good data yet
+		if ( preg_match('/class="pre">/', $html)) {
+			return false;
+		}
+		return true;
 	}
 	
 	public function buildDTO($html) {
@@ -111,7 +114,7 @@ class Scraper_AccuWeather45 extends WeatherScraper {
 		******************************************************************/
 		if (stripos($html, "\n") !== false ) $html = $this->cleanup($html);
 		if ( !$this->haveValidRow($html)) return null;
-		$dto = new WeatherDTO($this);
+		$dto = new Weather_WeatherDTO($this);
 		$regex = '/<td(?:.*?)>(.+?)<\/td>/';
 		preg_match_all($regex, $html, $m);
 		//	HIGH
@@ -137,6 +140,7 @@ class Scraper_AccuWeather45 extends WeatherScraper {
 		}
 		//	FORECAST
 		if (isset($m[1][4]) && !preg_match('/<td>&nbsp;<\/td>/',$m[1][4])) {
+			//echo "Prose: |{$m[1][4]}|\n";
 			list(,$prose) = explode('/>', $m[1][4]);
 			$prose = trim($prose);
 			$dto->setProseDescription($prose);
