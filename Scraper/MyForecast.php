@@ -41,8 +41,8 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 
 
 	public function scrape() {
-		$this->html = $this->cleanup(Utility_SecretAgent::getURL($this->siteURL));
-		$html = $this->cleanup(Utility_SecretAgent::getURL($url));
+		//$this->html = $this->cleanup(Utility_SecretAgent::getURL($this->siteURL));
+		//$html = $this->cleanup(Utility_SecretAgent::getURL($url));
 		$row = $this->extractTableData($html);
 		$data = $this->extractDailyData ($html);
 		$dto = $this->setDTOFromData($data);
@@ -147,16 +147,7 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 		}
 	}
 	
-	/***************************
-	*	Logfile Access
-	*	(push this up to Scraper)
-	***************************
-	
-	public function log($message = '') {
-		if (!empty($message)) Logger::log($message);
-	}*/
 
-}
 
 
 ?>
