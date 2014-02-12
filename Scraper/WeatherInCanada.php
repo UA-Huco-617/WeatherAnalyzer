@@ -4,7 +4,6 @@ class Scraper_WeatherInCanada extends Weather_WeatherScraper {
 
 	protected $siteID = 9;
 	protected $siteURL = 'http://www.weather-in-canada.com/Alberta/Weather_in_Edmonton/14-day-forecast';
-	//protected $siteURL = 'weather-in-canada-dot-com.html';
 
 	public function scrape() {
 		$rows = $this->extractValidRows($this->html);
