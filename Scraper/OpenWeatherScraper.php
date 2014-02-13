@@ -49,7 +49,7 @@ class Scraper_OpenWeatherScraper extends Weather_WeatherScraper {
 			preg_match_all($date_regex, $row, $date);
 		
 	
-			$dto= new Weather_WeatherDTO();
+			$dto= new Weather_WeatherDTO($this);
 			//is this a class or a funcyion??? how do we use it??
 		
 			$dto->setForecastDate($date[1][0]);
