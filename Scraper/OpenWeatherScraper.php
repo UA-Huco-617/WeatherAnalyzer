@@ -7,9 +7,9 @@
 *	collects data from one particular weather URL page.
 *
 *	Children should override three things:
-*		 $siteID ==> your Site ID from the `weather_site` table
-*		 $siteurl ==> the URL this scraper collects data from
-*		 scrape() ==> function where the scraper does its stuff;
+*		• $siteID ==> your Site ID from the `weather_site` table
+*		• $siteurl ==> the URL this scraper collects data from
+*		• scrape() ==> function where the scraper does its stuff;
 *			you may or may not want to break this into sub-functions.
 *
 *	NOTE: your HTML is loaded by the constructor and is in $this->html
@@ -49,7 +49,7 @@ class Scraper_OpenWeatherScraper extends Weather_WeatherScraper {
 			preg_match_all($date_regex, $row, $date);
 		
 	
-			$dto= new Weather_WeatherDTO($this);
+			$dto= new Weather_WeatherDTO();
 			//is this a class or a funcyion??? how do we use it??
 		
 			$dto->setForecastDate($date[1][0]);
