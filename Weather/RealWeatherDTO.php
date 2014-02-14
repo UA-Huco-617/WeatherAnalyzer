@@ -4,6 +4,7 @@ class Weather_RealWeatherDTO extends Weather_WeatherDTO {
 
 	protected $actualprecip;
 	protected $cloudCover;
+	protected $coefficient;
 	
 	/*****************************************
 	*	Actual Precipitation
@@ -27,6 +28,20 @@ class Weather_RealWeatherDTO extends Weather_WeatherDTO {
 
 	public function setCloudCover($percent = null) {
 		$this->cloudCover = $percent;
+	}
+
+	/*****************************************
+	*	Pressure Coefficient
+	*	This is the slope of the linear
+	*	regression of the daily pressures.
+	*****************************************/
+	
+	public function getPressureCoefficient() {
+		return $this->coefficient;
+	}	
+
+	public function setPressureCoefficient($coefficient = null) {
+		$this->coefficient = $coefficient;
 	}
 
 
