@@ -21,7 +21,7 @@ class Utility_WindDirection {
 		array('abbrev' => 'NNW', 'direction' => 'North-northwest', 'degree' => 337.5)
 	);
 	
-	public function getAverageWindDirection($rows) {
+	public static function getAverageWindDirection($rows) {
 		//	Use trig -- convert to (x,y) points on the unit circle
 		//	and average, then find the arctangent of the averaged point.
 		$sum_x = $sum_y = 0;
