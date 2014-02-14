@@ -72,7 +72,7 @@ class Weather_AirportWeatherScraper extends Weather_RealWeatherScraper {
 		}
 		$rows = $this->getHourlyRows($html);
 		if (!$rows) {
-			Utility_Logger::log(__METHOD__ . ' cannot parse rows from HTML. Failing.');
+			Utility_Logger::log(__METHOD__ . ' cannot parse rows from HTML on Site ID ' . $this->getSiteID() . '. Failing.');
 			return false;
 		}
 		$windSpeed = $this->getWindSpeed($rows);
