@@ -14,6 +14,12 @@ class Weather_AirportWeatherScraper extends Weather_RealWeatherScraper {
 	const HUMIDITY_INDEX = 3;
 	const NOT_NUMERIC_DATA = '/[^-.0-9]/';
 
+	//	arrays to stash info
+	protected $windSpeedArray = array();
+	protected $windDirectionArray = array();
+	protected $pressureArray = array();
+	protected $humidityArray = array();
+
 	public function __construct($weathermanager = null) {
 		parent::__construct( $weathermanager );
 		$urlparams = 'Year=' . $this->yesterday->getYear() . '&Month=' . $this->yesterday->getMonth();
@@ -75,16 +81,40 @@ class Weather_AirportWeatherScraper extends Weather_RealWeatherScraper {
 			Utility_Logger::log(__METHOD__ . ' cannot parse rows from HTML on Site ID ' . $this->getSiteID() . '. Failing.');
 			return false;
 		}
-		$windSpeed = $this->getWindSpeed($rows);
-		$this->dto->setWindSpeed($windSpeed);
+		$this->buildDataArrays($rows);
+		
+		$this->dto->setWindSpeed(Utility_Statistics::getAverage($this->windSpeedArray));
 		$this->dto->setWindSpeedUnit('km/h'); // yeah, hard-coded, but it's EnviroCan!
-		$windDirection = $this->getWindDirection($rows);	//	account for units of 10s
-		$this->dto->setWindDirection($windDirection);
-		$pressure = $this->getPressure($rows);
-		$this->dto->setPressure($pressure);
-		$humidity = $this->getHumidity($rows);
-		$this->dto->setHumidity($humidity);
+		$this->dto->setWindDirection(Utility_WindDirection::getAverageWindDirection($this->windDirectionArray));
+		$this->dto->setPressure(Utility_Statistics::getAverage($this->pressureArray));
+		$this->dto->setPressureUnit('kPa');	//	is this right?
+		//$this->dto->setPressureCoefficient(Utility_Statistics::getLinearRegressionCoefficient($this->pressureArray));
+		$this->dto->setHumidity(Utility_Statistics::getAverage($this->humidityArray));
 		return true;
+	}
+
+	public function buildDataArrays($rows) {
+		foreach ($rows as $row) {
+			//	wind speed
+			if (!empty($row[self::SPEED_INDEX]) and 
+				!preg_match(self::NOT_NUMERIC_DATA, $row[self::SPEED_INDEX]))
+					$this->windSpeedArray[] = $row[self::SPEED_INDEX];
+
+			// wind direction
+			if (!empty($row[self::DIRECTION_INDEX]) and 
+				!preg_match(self::NOT_NUMERIC_DATA, $row[self::DIRECTION_INDEX]))
+					$this->windDirectionArray[] = $row[self::DIRECTION_INDEX] * 10;
+
+			// pressure
+			if (!empty($row[self::PRESSURE_INDEX]) and 
+				!preg_match(self::NOT_NUMERIC_DATA, $row[self::PRESSURE_INDEX]))
+					$this->pressureArray[] = $row[self::PRESSURE_INDEX];
+
+			// humidity
+			if (!empty($row[self::HUMIDITY_INDEX]) and 
+				!preg_match(self::NOT_NUMERIC_DATA, $row[self::HUMIDITY_INDEX]))
+					$this->humidityArray[] = $row[self::HUMIDITY_INDEX];
+		}
 	}
 	
 	public function buildHourlyURL() {
@@ -114,59 +144,6 @@ class Weather_AirportWeatherScraper extends Weather_RealWeatherScraper {
 			$clean_rows[] = $cells[1];
 		}
 		return $clean_rows;
-	}
-	
-	public function getWindSpeed($rows) {
-		$total = $count = 0;
-		foreach ($rows as $row) {
-			if (empty($row[self::SPEED_INDEX]) or 
-				preg_match(self::NOT_NUMERIC_DATA, $row[self::SPEED_INDEX])) continue;
-			$total += $row[self::SPEED_INDEX];
-			$count++;
-		}
-		return round($total / $count);
-	}
-	
-	public function getWindDirection($rows) {
-		//	Environment Canada measures this in units of 10 degrees;
-		//	Use trig -- convert to (x,y) points on the unit circle
-		//	and average, then find the arctangent of the averaged point.
-		$sum_x = $sum_y = $count = 0;
-		foreach ($rows as $row) {
-			if (empty($row[self::DIRECTION_INDEX]) or 
-				preg_match(self::NOT_NUMERIC_DATA, $row[self::DIRECTION_INDEX])) continue;
-			$dir = $row[self::DIRECTION_INDEX] * 10;
-			$sum_x += cos(deg2rad($dir));
-			$sum_y += sin(deg2rad($dir));
-			$count++;
-		}
-		$avg_x = $sum_x / $count;
-		$avg_y = $sum_y / $count;
-		$angle = rad2deg(atan($avg_y / $avg_x));
-		if ($angle < 0) $angle += 360;
-		return round($angle);
-	}
-	
-	public function getPressure($rows) {
-		$total = $count = 0;
-		foreach ($rows as $row) {
-			if (empty($row[self::PRESSURE_INDEX]) or 
-				preg_match(self::NOT_NUMERIC_DATA, $row[self::PRESSURE_INDEX])) continue;
-			$total += $row[self::PRESSURE_INDEX];
-			$count++;
-		}
-		return round(($total / $count), 2);
-	}
-	
-	public function getHumidity($rows) {
-		$total = $count = 0;
-		foreach ($rows as $row) {
-			if (empty($row[self::HUMIDITY_INDEX]) or 
-				preg_match(self::NOT_NUMERIC_DATA, $row[self::HUMIDITY_INDEX])) continue;
-			$total += $row[self::HUMIDITY_INDEX];
-			$count++;
-		}
-		return round($total / $count);
 	}
 	
 	public function validate($string) {
