@@ -78,6 +78,7 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 			$dto->setProseDescription($row[0][0]);
 
 			//high
+
 			$high = str_replace('&#xB0;C', '', $row[0][1]);
 			$dto->setHighTemp($high);
 			
@@ -96,19 +97,19 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 			$dto->setPrecipitationUnit($punit);
 
 			//precipamount this is an issue - site gives cm when snow...but rain in same place?
-			//need to do something for if this is null!  
+			//need to do something for if this is null? 
 			$precipamount = str_replace('cm', '', $row[0][8]);
 			$dto->setSnowAmount($precipamount);
 			$dto->setPrecipitationUnit($punit);
 
 			//Wind Speed
-			$wind_regex ('/(\d)/', $row[0][3]);
+			$wind_regex ('/<td align="center" valign="middle" class="normal">(\d)</td>/', $row[0][3]);
 			preg_match($wind_regex, $row, $wind);
 			$dto->setWindSpeed($wind);
 			$dto->setWindSpeedUnit($windunit);
 
 			//Wind Direction
-			$winddir_regex ('/(N|NNE|NE|ENE|E|ESE|SE|SSE|S|SSW|SW|WSW|W|WNW|NW|NNW)+?/', $row[0][3]);
+			$winddir_regex ('/<td align="center" valign="middle" class="normal">(N|NNE|NE|ENE|E|ESE|SE|SSE|S|SSW|SW|WSW|W|WNW|NW|NNW)+?</td>/', $row[0][3]);
 			preg_match($winddir_regex, $row, $winddir);
 			$dto->setWindDirection ($winddir);
 
