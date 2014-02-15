@@ -44,11 +44,11 @@ class Scraper_ForecaScraper extends Weather_WeatherScraper {
 		
 		$hi_regex='/Hi: <strong>(.+?)&deg;/';
 		$low_regex='/Lo: <strong>(.+?)&deg;/';
-		preg_match_all($hi_regex, $row, $high);
-		preg_match_all($low_regex, $row, $low);
+		preg_match_all($hi_regex, $row, $hightemp);
+		preg_match_all($low_regex, $row, $lowtemp);
 
-		$dto->setHighTemp($high[1][1]);
-		$dto->setLowTemp($low[1][1]);
+		$dto->setHighTemp($hightemp[1][1]);
+		$dto->setLowTemp($lowtemp[1][1]);
 
 
 		
@@ -64,7 +64,7 @@ class Scraper_ForecaScraper extends Weather_WeatherScraper {
 		
 
 		$prose_regex='/<div class="symbol_50x50d symbol_d(.+?)" alt="(.+?)" title/';  
-		preg_match_all($prose_regex, $row, $prose);		
+		preg_match_all($prose_regex, $row, $desc);		
 		$dto->setProseDescription($desc[1][2]);
 		
 		$wind_dir_regex='/symb-wind\/(.+?)" alt="(.+?)"/';
