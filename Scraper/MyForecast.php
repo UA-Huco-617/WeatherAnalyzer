@@ -37,6 +37,7 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 
 
 //this function loops through the above arrays to make each day a new array, now each prose is [0] etc.
+	
 	public function extractDailyData($row){
 		foreach ($table as $day => $row) {
 		return $row;
@@ -47,7 +48,8 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 	public function extractDate($html) {
 		$date_regex = '/<td align="left" valign="middle" bgcolor="#3366CC" class="wt">(.*?)<\/td>/';
 		preg_match_all($date_regex, $html, $date_matches);
-		print_r($date_matches[1]);
+		//print_r($date_matches[1]);
+		return $date_matches[1];
 
 	}
 
