@@ -32,7 +32,7 @@ class Scraper_ForecaScraper extends Weather_WeatherScraper {
 			*	The regex produces this data:
 			*	[1][1] => high 
 			*	[1][1] => low 
-			*   [2][0] => date
+			*   [1][1] => date
 			*   [1][2] => prosedesc
 			*   [1][2] => winddirection
 			*   [1][1] => windspeed
@@ -54,13 +54,13 @@ class Scraper_ForecaScraper extends Weather_WeatherScraper {
 		
 		$date_regex='/<span class="h5">(.+?)<\/span>/';
 		preg_match_all($date_regex, $row, $date);		
-			if( $date[2][0]='Today') {
-				$date[2][0]=date('D M d');
+			if( $date[1][1][0]='Today') {
+				$date[1][1][0]=date('D M d');
 			}
-			if( $date[2][1]='Tomorrow') {
-			$date[2][1]=date('D M d',time()+86400);
+			if( $date[1][1][1]='Tomorrow') {
+			$date1[1][1][1]=date('D M d',time()+86400);
 			}
-		$dto->setForecastDate($date[2][0]);
+		$dto->setForecastDate($date[1][1]);
 		
 
 		$prose_regex='/<div class="symbol_50x50d symbol_d(.+?)" alt="(.+?)" title/';  
