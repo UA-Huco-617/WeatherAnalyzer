@@ -56,20 +56,17 @@ class Scraper_ToryScraper extends Weather_RealWeatherScraper {
 			$windspeed[] = $cells[1][5];
 			$winddirection[] = $cells[1][6];
 		}
-		$this->dto->setHumidity($this->getAverage($humidity));
-		$this->dto->setPressure($this->getAverage($pressure));
+		$this->dto->setHumidity(Utility_Statistics::getAverage($humidity));
+		$this->dto->setPressure(Utility_Statistics::getAverage($pressure));
+		$this->dto->setPressureCoefficient(Utility_Statistics::getLinearRegressionCoefficient($pressure));
 		$this->dto->setPressureUnit('kPa');
 		$this->dto->setRainAmount(array_sum($rain));
 		$this->dto->setRainUnit('mm');
-		$this->dto->setWindSpeed($this->getAverage($windspeed));
+		$this->dto->setWindSpeed(Utility_Statistics::getAverage($windspeed));
 		$this->dto->setWindSpeedUnit('m/s'); // meters per second! not the typical km/h
 		$direction = Utility_WindDirection::getAverageWindDirection($winddirection);
 		$this->dto->setWindDirection($direction);
 		return true;
-	}
-	
-	public function getAverage($rows) {
-		return array_sum($rows) / count($rows);
 	}
 	
 	public function buildHourlyURL() {
@@ -109,18 +106,14 @@ class Scraper_ToryScraper extends Weather_RealWeatherScraper {
 	public function setDTOFromRow($row) {
 		$regex = '/<td>(.+?)<\/td>/';
 		preg_match_all( $regex, $row, $matches );
-		//	Tory temps are DECIMAL(4,2), so let's round 'em off
-		//	to match the database column which is DECIMAL(3,1)
+		//	Tory temps are DECIMAL(4,2), but they'll get rounded
+		//	off properly when they get inserted into the database.
 		//	min temp ==> [1][0]
 		//	max temp ==> [1][2]
-		
 		//	set high temp
-		$high = round($matches[1][2], 1);	// round to 1 decimal place
-		$this->dto->setHighTemp($high);
-		
+		$this->dto->setHighTemp($matches[1][2]);
 		// set low temp
-		$low = round($matches[1][0], 1);	// round to 1 decimal place
-		$this->dto->setLowTemp($low);
+		$this->dto->setLowTemp($matches[1][0]);
 	}
 
 }
