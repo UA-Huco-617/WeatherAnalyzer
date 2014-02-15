@@ -4,68 +4,42 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 	
 	protected $siteID = 6;				
 	protected $siteURL = 'http://www.myforecast.com/bin/expanded_forecast_15day.m?city=54149&metric=true';
-	protected $date;
-	protected $pageHasData = true;	
+	//protected $date;
+	//protected $pageHasData = true;	
+
 	
-	/*public function __construct() {
-		parent::__construct();
-		$this->date = new Utility_Date();
-	}
-*/
+
 	public function __construct() {
 		$this->weathercollection = new Weather_WeatherCollection();
 		$this->date = new Utility_Date();
 	}
-	
-	public function getSiteID() {
-		return $this->siteID;
-	}
-	
-	public function getSiteURL() {
-		return $this->siteURL;
-	}
-
-	public function getWeatherDTOCollection() {
-		return $this->weathercollection;
-	}
-
-	public function log($message = null) {
-		if (!empty($message)) Logger::log($message);
-	}
-	
-	public function cleanup($text = '') {
-		return str_replace("\n", ' ', $text);
-	}
-	
-	
 
 
 	public function scrape() {
-		//$this->html = $this->cleanup(Utility_SecretAgent::getURL($this->siteURL));
-		//$html = $this->cleanup(Utility_SecretAgent::getURL($url));
-		$row = $this->extractTableData($html);
-		$data = $this->extractDailyData ($html);
-		$dto = $this->setDTOFromData($data);
-		$this->addToCollection($dto);
-		return count($this->weathercollection);
-
+		
+		$rows=$this->extractRowsFromHTML($this->html);
+			foreach ($rows as $row) {
+				$dto=$this->buildDTOFromRow($row);
+				$this->addToCollection($dto);
+			}
+		
+			return count($this->weathercollection);
 	}
 
 
 //this function gives me one array for each day so day 1 - array[0] and day 15 - array[14]
-	public function extractTableData($html) {
+	public function extractRowsFromHTML($html) {
 		$cell_regex = '/<td align="center" valign="middle" class="normal">(.*?)<\/td>/';
 		preg_match_all($cell_regex, $html, $cell_matches);
-		$row = array_chunk($cell_matches[0], 9);
-		return $row;
-		//print_r($row);
+		$table = array_chunk($cell_matches[0], 9);
+		return $table;
 	}
 
 
 //this function loops through the above arrays to make each day a new array, now each prose is [0] etc.
 	public function extractDailyData($row){
-		foreach ($row as $day => $data) {
-		return $data;
+		foreach ($table as $day => $row) {
+		return $row;
      	// print_r($data);
 }
 }
@@ -78,8 +52,8 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 	}
 
 
-	public function setDTOFromData($data) {
-		$dto = new WeatherDTO($this);
+	public function setDTOFromRow($row) {
+		$dto = new Weather_WeatherDTO($this);
 
 /*
 ************************
@@ -95,59 +69,50 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 * 24 h precip total [8]*
 ***********************/
 		
-			$dto->setForecastDate();
+			$dto->setForecastDate($date_matches[1]);
 
 			//prose		
-			$dto->setProseDescription($data[0]);
+
+			$dto->setProseDescription($row[0][0]);
 
 			//high
-			$high = str_replace('&#xB0;C', '', $data[1]);
+			$high = str_replace('&#xB0;C', '', $row[0][1]);
 			$dto->setHighTemp($high);
 			
 			//low
-			$low = str_replace('&#xB0;C', '' , $data[2]);
+			$low = str_replace('&#xB0;C', '' , $row[0][2]);
 			$dto->setLowTemp($low);
 
 			//humidity
-			$humidity = str_replace('%', '', $data[4]);
+			$humidity = str_replace('%', '', $row[0][4]);
 			$dto->setHumidity($humidity);
 
 
 			//chanceprecip
-			$chanceprecip = str_replace('%', '', $data[7]);
+			$chanceprecip = str_replace('%', '', $row[0][7]);
 			$dto->setChanceOfPrecip($chanceprecip);
+			$dto->setPrecipitationUnit($punit);
 
 			//precipamount this is an issue - site gives cm when snow...but rain in same place?
 			//need to do something for if this is null!  
-			$precipamount = str_replace('cm', '', $data[8]);
+			$precipamount = str_replace('cm', '', $row[0][8]);
 			$dto->setSnowAmount($precipamount);
+			$dto->setPrecipitationUnit($punit);
+
+			//Wind Speed
+			$wind_regex ('/(\d)/', $row[0][3]);
+			preg_match($wind_regex, $row, $wind);
+			$dto->setWindSpeed($wind);
+			$dto->setWindSpeedUnit($windunit);
+
+			//Wind Direction
+			$winddir_regex ('/(N|NNE|NE|ENE|E|ESE|SE|SSE|S|SSW|SW|WSW|W|WNW|NW|NNW)+?/', $row[0][3]);
+			preg_match($winddir_regex, $row, $winddir);
+			$dto->setWindDirection ($winddir);
 
 			return $dto;
 
 	}
-
-
-
-
-
-
-
-
-  //NEED THIS SOMEWHERE...???
-
-	/***************************
-	*	Database Access
-	***************************/
-	
-	public function saveToDatabase() {
-		if ($this->dbhelper->saveToDatabase()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-
-
+}
 
 ?>
