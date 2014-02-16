@@ -6,105 +6,89 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 	protected $siteURL = 'http://www.myforecast.com/bin/expanded_forecast_15day.m?city=54149&metric=true';
 
 	public function scrape() {
-		
-		$rows=$this->extractRowsFromHTML($this->html);
-			foreach ($rows as $row) {
-				$dto=$this->buildDTOFromRow($row);
-				$this->addToCollection($dto);
-			}
-		
-			return count($this->weathercollection);
+		$table = $this->extractForecastTable($this->html);
+		$rows=$this->extractRowsFromTable($table);
+		foreach ($rows as $row) {
+			$dto=$this->setDTOFromRow($row);
+			$this->addToCollection($dto);
+		}
+		return count($this->weathercollection);
 	}
 
-
-//this function gives me one array for each day so day 1 - array[0] and day 15 - array[14]
-	public function extractRowsFromHTML($html) {
-		$cell_regex = '/<td align="center" valign="middle" class="normal">(.*?)<\/td>/';
-		preg_match_all($cell_regex, $html, $cell_matches);
-		$table = array_chunk($cell_matches[0], 9);
-		return $table;
+	public function extractForecastTable($html) {
+		$table_regex = '/<table width="100%" border="0" cellspacing="1" cellpadding="3">(.+?)<\/table>/';
+		preg_match($table_regex, $html, $table);
+		return $table[1];
 	}
 
-
-//this function loops through the above arrays to make each day a new array, now each prose is [0] etc.
-	
-	public function extractDailyData($row){
-		foreach ($table as $day => $row) {
-		return $row;
-     	// print_r($data);
-}
-}
-
-	public function extractDate($html) {
-		$date_regex = '/<td align="left" valign="middle" bgcolor="#3366CC" class="wt">(.*?)<\/td>/';
-		preg_match_all($date_regex, $html, $date_matches);
-		//print_r($date_matches[1]);
-		return $date_matches[1];
-
+	public function extractRowsFromTable($html) {
+		$row_regex = '/<tr(?:.+?)>(.+?)<\/tr>/';
+		preg_match_all($row_regex, $html, $row_matches);
+		//	$row[0] is a header, so throw it away
+		array_shift($row_matches[1]);
+		return $row_matches[1];
 	}
-
 
 	public function setDTOFromRow($row) {
 		$dto = new Weather_WeatherDTO($this);
+		$cell_regex = '/<td(?:.*?)>(.+?)<\/td>/';
+		preg_match_all($cell_regex, $row, $cells);
 
-/*
-************************
-* Data                 *
-* proseDescription [0] *
-* High Temp [1]        *
-* Low Temp [2]         *
-* Wind Speed/Dir [3]   *
-* Humidity [4]         *
-* Comfort Level [5]    *
-* UV Index [6]         *
-* Prob Precip [7]      *
-* 24 h precip total [8]*
-***********************/
+		/*
+		[1][0] => date
+	    [1][1] => <img> (ignore)
+	    [1][2] => prose forecast
+	    [1][3] => High => 2&#xB0;C
+	    [1][4] => Low => -8&#xB0;C
+	    [1][5] => Wind Speed | unit | direction => 23&nbsp;km/h / WSW
+	    [1][6] => Humidity => 59%
+	    [1][7] => comfort level (ignore)
+	    [1][8] => UV index (ignore)
+	    [1][9] => Chance of Precip
+	    [1][10] => 24 hr precip total
+	    */
 		
-			$dto->setForecastDate($date_matches[1]);
-
-			//prose		
-
-			$dto->setProseDescription($row[0][0]);
-
-			//high
-
-			$high = str_replace('&#xB0;C', '', $row[0][1]);
-			$dto->setHighTemp($high);
+		//	date
+		$dto->setForecastDate($cells[1][0]);
 			
-			//low
-			$low = str_replace('&#xB0;C', '' , $row[0][2]);
-			$dto->setLowTemp($low);
+		//prose		
+		$dto->setProseDescription(trim($cells[1][2]));
 
-			//humidity
-			$humidity = str_replace('%', '', $row[0][4]);
-			$dto->setHumidity($humidity);
+		//high
+		list($high, $unit) = explode('&#xB0;', $cells[1][3]);
+		$dto->setHighTemp($high);
+		$dto->setTempUnit(trim($unit));
+			
+		//low
+		list($low, $unit) = explode('&#xB0;', $cells[1][4]);
+		$dto->setLowTemp($low);
 
+		//	wind speed; unit; direction
+		//	23&nbsp;km/h / WSW
+		$slash = strrpos($cells[1][5], '/');
+		$front = substr($cells[1][5], 0, $slash - 1);
+		$direction = substr($cells[1][5], $slash + 1);
+		list($speed, $unit) = explode('&nbsp;', $front);
+		$dto->setWindSpeed($speed);
+		$dto->setWindSpeedUnit(trim($unit));
+		$degrees = Utility_WindDirection::getDegrees(trim($direction));
+		$dto->setWindDirection($degrees);
 
-			//chanceprecip
-			$chanceprecip = str_replace('%', '', $row[0][7]);
-			$dto->setChanceOfPrecip($chanceprecip);
-			$dto->setPrecipitationUnit($punit);
+		//	humidity
+		$humidity = trim(str_replace('%', '', $cells[1][6]));
+		$dto->setHumidity($humidity);
 
-			//precipamount this is an issue - site gives cm when snow...but rain in same place?
-			//need to do something for if this is null? 
-			$precipamount = str_replace('cm', '', $row[0][8]);
-			$dto->setSnowAmount($precipamount);
-			$dto->setPrecipitationUnit($punit);
+		//	chanceprecip
+		$chanceprecip = str_replace('%', '', $cells[1][9]);
+		$dto->setChanceOfPrecip($chanceprecip);
 
-			//Wind Speed
-			$wind_regex ('/<td align="center" valign="middle" class="normal">(\d)</td>/', $row[0][3]);
-			preg_match($wind_regex, $row, $wind);
-			$dto->setWindSpeed($wind);
-			$dto->setWindSpeedUnit($windunit);
+		//	precip amount [1][10] is thus far empty,
+		//	except for a &nbsp;
+		//	Let's log something if this changes.
+		if (trim($cells[1][10]) != '&nbsp;')
+			Utility_Logger::log('Site ID' . $this->siteID . ' has real data for 24-hour Precip: "'. $cells[1][10] . '"');
 
-			//Wind Direction
-			$winddir_regex ('/<td align="center" valign="middle" class="normal">(N|NNE|NE|ENE|E|ESE|SE|SSE|S|SSW|SW|WSW|W|WNW|NW|NNW)+?</td>/', $row[0][3]);
-			preg_match($winddir_regex, $row, $winddir);
-			$dto->setWindDirection ($winddir);
-
-			return $dto;
-
+		return $dto;
 	}
 }
 
