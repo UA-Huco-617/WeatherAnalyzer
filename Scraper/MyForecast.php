@@ -4,16 +4,6 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 	
 	protected $siteID = 6;				
 	protected $siteURL = 'http://www.myforecast.com/bin/expanded_forecast_15day.m?city=54149&metric=true';
-	//protected $date;
-	//protected $pageHasData = true;	
-
-	
-
-	public function __construct() {
-		$this->weathercollection = new Weather_WeatherCollection();
-		$this->date = new Utility_Date();
-	}
-
 
 	public function scrape() {
 		
