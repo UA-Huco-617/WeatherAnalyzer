@@ -69,7 +69,7 @@ CREATE TABLE `weather_forecast` (
   `prose_forecast` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `site_id` (`site_id`,`scrape_date`,`forecast_date`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -78,7 +78,6 @@ CREATE TABLE `weather_forecast` (
 
 LOCK TABLES `weather_forecast` WRITE;
 /*!40000 ALTER TABLE `weather_forecast` DISABLE KEYS */;
-INSERT INTO `weather_forecast` VALUES (1,4,'2014-02-16','2014-02-16',0,'C',-10,'C',NULL,'mm',NULL,'cm',NULL,NULL,'mm',18,'kmh',270,NULL,'Partly cloudy and light snow'),(2,4,'2014-02-16','2014-02-17',1,'C',-12,'C',NULL,'mm',NULL,'cm',NULL,NULL,'mm',18,'kmh',270,NULL,'Partly cloudy'),(3,4,'2014-02-16','2014-02-18',0,'C',-11,'C',NULL,'mm',NULL,'cm',NULL,NULL,'mm',22,'kmh',270,NULL,'Partly cloudy'),(4,4,'2014-02-16','2014-02-19',-6,'C',-10,'C',NULL,'mm',NULL,'cm',NULL,NULL,'mm',14,'kmh',0,NULL,'Overcast and snow'),(5,4,'2014-02-16','2014-02-20',-9,'C',-14,'C',NULL,'mm',NULL,'cm',NULL,NULL,'mm',7,'kmh',0,NULL,'Overcast'),(6,4,'2014-02-16','2014-02-21',-7,'C',-19,'C',NULL,'mm',NULL,'cm',NULL,NULL,'mm',7,'kmh',270,NULL,'Partly cloudy'),(7,4,'2014-02-16','2014-02-22',-9,'C',-19,'C',NULL,'mm',NULL,'cm',NULL,NULL,'mm',11,'kmh',0,NULL,'Partly cloudy'),(8,4,'2014-02-16','2014-02-23',-10,'C',-18,'C',NULL,'mm',NULL,'cm',NULL,NULL,'mm',14,'kmh',0,NULL,'Partly cloudy'),(9,4,'2014-02-16','2014-02-24',-8,'C',-17,'C',NULL,'mm',NULL,'cm',NULL,NULL,'mm',14,'kmh',135,NULL,'Partly cloudy'),(10,4,'2014-02-16','2014-02-25',0,'C',-13,'C',NULL,'mm',NULL,'cm',NULL,NULL,'mm',14,'kmh',180,NULL,'Partly cloudy');
 /*!40000 ALTER TABLE `weather_forecast` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -160,4 +159,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-02-16 14:44:39
+-- Dump completed on 2014-02-16 15:20:52
