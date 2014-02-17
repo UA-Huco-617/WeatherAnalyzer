@@ -65,8 +65,10 @@ CREATE TABLE `weather_forecast` (
   `wind_speed` tinyint(3) unsigned DEFAULT NULL,
   `wind_unit` varchar(4) DEFAULT 'km/h',
   `wind_direction` smallint(5) unsigned DEFAULT NULL,
+  `humidity` tinyint(3) unsigned DEFAULT NULL,
   `prose_forecast` text,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `site_id` (`site_id`,`scrape_date`,`forecast_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -135,7 +137,7 @@ CREATE TABLE `weather_site` (
   `site_url` varchar(250) DEFAULT NULL,
   `notes` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -144,7 +146,7 @@ CREATE TABLE `weather_site` (
 
 LOCK TABLES `weather_site` WRITE;
 /*!40000 ALTER TABLE `weather_site` DISABLE KEYS */;
-INSERT INTO `weather_site` VALUES (1,'Edmonton International Airport','http://climate.weather.gc.ca/climateData/dailydata_e.html?StationID=50149&Year=2014&Month=1','Note StationID; modify GET parameters for month'),(2,'Edmonton City Centre AWOS','http://climate.weather.gc.ca/climateData/dailydata_e.html?StationID=31427&Year=2014&Month=1','Sometimes misses data, but note StationID and modify GET parameters for month'),(3,'OpenWeather.com (6-day)','http://www.weatherforecastmap.com/canada/edmonton','Andrea and Christina'),(4,'Foreca (10-day)','http://www.foreca.com/Canada/Edmonton?tenday','Aiden and John'),(5,'CBC (6-day)','http://www.cbc.ca/edmonton/weather/s0000045.html','Michael and Zach'),(6,'MyForecast (15-day)','http://www.myforecast.com/bin/expanded_forecast_15day.m?city=54149&metric=true','Sonja'),(7,'AccuWeather (45-day)','http://www.accuweather.com/en/ca/edmonton/t5k/daily-weather-forecast/52478','hq; uses \'precip\' instead of \'rain\''),(8,'Tory Building Weather Station','http://easweb.eas.ualberta.ca/weather_archive.php','hq; real weather data but has only temps, pressure and humidity'),(9,'Weather-in-Canada.com (14-day)','http://www.weather-in-canada.com/Alberta/Weather_in_Edmonton/14-day-forecast','hq; wind direction uses \'V\' for \'W\' (I think)'),(10,'Weather Underground','http://www.wunderground.com/global/stations/71123.html','Dan'),(11,'Environment Canada City Centre','http://weather.gc.ca/city/pages/ab-50_metric_e.html','Brett');
+INSERT INTO `weather_site` VALUES (1,'Edmonton International Airport','http://climate.weather.gc.ca/climateData/dailydata_e.html?StationID=50149&Year=2014&Month=1','Note StationID; modify GET parameters for month'),(2,'Edmonton City Centre AWOS','http://climate.weather.gc.ca/climateData/dailydata_e.html?StationID=31427&Year=2014&Month=1','Sometimes misses data, but note StationID and modify GET parameters for month'),(3,'OpenWeather.com (6-day)','http://www.weatherforecastmap.com/canada/edmonton','Andrea and Christina'),(4,'Foreca (10-day)','http://www.foreca.com/Canada/Edmonton?tenday','Aiden and John'),(5,'CBC (6-day)','http://www.cbc.ca/edmonton/weather/s0000045.html','Michael and Zach'),(6,'MyForecast (15-day)','http://www.myforecast.com/bin/expanded_forecast_15day.m?city=54149&metric=true','Sonja'),(7,'AccuWeather (45-day)','http://www.accuweather.com/en/ca/edmonton/t5k/daily-weather-forecast/52478','hq; uses \'precip\' instead of \'rain\''),(8,'Tory Building Weather Station','http://easweb.eas.ualberta.ca/weather_archive.php','hq; real weather data but has only temps, pressure and humidity'),(9,'Weather-in-Canada.com (14-day)','http://www.weather-in-canada.com/Alberta/Weather_in_Edmonton/14-day-forecast','hq; wind direction uses \'V\' for \'W\' (I think)'),(10,'Weather Underground','http://www.wunderground.com/global/stations/71123.html','Dan'),(11,'Environment Canada City Centre','http://weather.gc.ca/city/pages/ab-50_metric_e.html','Brett'),(12,'Environment Canada International','http://weather.gc.ca/city/pages/ab-71_metric_e.html','Extended Brett\'s class'),(13,'Zoover UK (14-day)','http://www.zoover.co.uk/canada/alberta/edmonton/weather','Christina (just for fun!)');
 /*!40000 ALTER TABLE `weather_site` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -157,4 +159,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-02-15 13:42:49
+-- Dump completed on 2014-02-17 15:02:31
