@@ -43,8 +43,9 @@ class Database_DBMapperReal extends Database_DBMapper {
 		$raw['snow_unit'] = $this->dto->getSnowUnit();
 		//--------------------------------------------------------------------------------------
 		//		precipitation (sometimes used to measure the moisuture in snow)
+		//		MyForecast.com measures precip to two decimal places.
 		$raw['precip'] = $this->dto->getPrecipitation();
-			if (isset($raw['precip'])) $raw['precip'] = round($raw['precip'], 1);
+			if (isset($raw['precip'])) $raw['precip'] = round($raw['precip'], 2);
 		$raw['precip_unit'] = $this->dto->getPrecipitationUnit();
 		//--------------------------------------------------------------------------------------
 		//		cloud cover percentage
