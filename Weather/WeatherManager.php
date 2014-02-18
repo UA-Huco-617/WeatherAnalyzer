@@ -14,7 +14,7 @@ class Weather_WeatherManager {
 
 	public function __construct() {
 		$this->path_to_scrapers = $this->get_URL_up_a_directory() . 'Scraper';
-		Utility_Logger::log('Starting run; loading scrapers from ' . $this->path_to_scrapers );
+		Utility_Logger::log('Starting run.' );
 		$this->loadScraperFiles();
 		$this->instantiateScrapers();
 	}
