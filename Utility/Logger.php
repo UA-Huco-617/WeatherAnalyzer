@@ -2,7 +2,7 @@
 
 class Utility_Logger {
 
-	const LOGFILE = 'weather.log';
+	const LOGFILE = '/home/hquamen/web-docs/weather/log.txt';
 	
 	public static function log($message = '') {
 		date_default_timezone_set('America/Edmonton');
