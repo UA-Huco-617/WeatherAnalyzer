@@ -21,8 +21,8 @@ abstract class Weather_WeatherScraper {
 	protected $html;
 	
 	//	children should override these:
-	protected $siteID = 4;				//	your Site ID from the `weather_site` table in birdclub
-	protected $siteURL = 'http://www.foreca.com/Canada/Edmonton?tenday';			//	your URL to scrape
+	protected $siteID;					//	your Site ID from the `weather_site` table in birdclub
+	protected $siteURL = '';			//	your URL to scrape
 	
 	public function __construct() {
 		$this->weathercollection = new Weather_WeatherCollection();
