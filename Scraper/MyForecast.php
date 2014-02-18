@@ -82,11 +82,20 @@ class Scraper_MyForecast extends Weather_WeatherScraper{
 		$chanceprecip = str_replace('%', '', $cells[1][9]);
 		$dto->setChanceOfPrecip($chanceprecip);
 
-		//	precip amount [1][10] is thus far empty,
+		//	precip amount [1][10] is rarely filled,
 		//	except for a &nbsp;
-		//	Let's log something if this changes.
-		if (trim($cells[1][10]) != '&nbsp;')
-			Utility_Logger::log('Site ID' . $this->siteID . ' has real data for 24-hour Precip: "'. $cells[1][10] . '"');
+		//	But it'll be something like "3.39cm" if it has data.
+		$precip_cell = trim($cells[1][10]);
+		if ($precip_cell != '&nbsp;') {
+			$regex = '/([-.0-9]+)(\w+)/';
+			if (preg_match($regex, $precip_cell, $matches)) {
+				$dto->setPrecipitation($matches[1]);
+				$dto->setPrecipitationUnit($matches[2]);
+			} else {
+				Utility_Logger::log(__METHOD__ . ' has real Precipitation data for Site ID ' . $this->siteID .
+					' but regex did not match: ' . $precip_cell);
+			}
+		}
 
 		return $dto;
 	}
