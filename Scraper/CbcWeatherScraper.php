@@ -17,16 +17,8 @@
 class Scraper_CbcWeatherScraper extends Weather_WeatherScraper {
 
 	//	children should override these:
-	protected $siteID = '5';				//	your Site ID from the `weather_site` table in birdclub
+	protected $siteID = 5;				//	your Site ID from the `weather_site` table in birdclub
 	protected $siteURL = 'http://www.cbc.ca/edmonton/weather/s0000045.html';			//	your URL to scrape
-/*	
-	public function __construct() {
-	//	$this->WeatherCollection = new Weather_WeatherCollection();
-	//	date_default_timezone_set('America/Edmonton');
-		parent::__construct();
-		$this->date = new Utility_Date();
-	}
-	
 	
 	/*************************************************
 	*	Abstract method for children to define
@@ -59,7 +51,7 @@ class Scraper_CbcWeatherScraper extends Weather_WeatherScraper {
 		$dtos = array();
 
 		for ($number = 0; $number < 6; $number++ ) {
-			$dtos[] = new Weather_WeatherDTO();
+			$dtos[] = new Weather_WeatherDTO($this);
 		}
 
 		/***********************************
@@ -107,16 +99,25 @@ class Scraper_CbcWeatherScraper extends Weather_WeatherScraper {
 			$high = $low = null;
 			if (stripos($raw[1], '|') !== false) {
 				list($high, $low) = explode('|', $raw[1]);
+				// clean up data a bit
+				$high = str_replace('&deg;', '', $high);
+				$high = str_replace('High', '', $high);
+				$high = trim($high);
+				//		echo "Column $column High: |$high|\n"; 
+				$low = trim($low);
+				$low = str_replace('&deg;', '', $low);
+				$dtos[$column]->setHighTemp($high);
+				$dtos[$column]->setLowTemp($low);
+			} else {
+				$solo_regex = '/(High|Low)?\s*([-.0-9]+)&deg;/';
+				preg_match($solo_regex, $raw[1], $solo);
+				if ($solo[1] == 'High') {
+					$dto[$column]->setHighTemp($solo[2]);
+				} else {
+					$dto[$column]->setLowTemp($solo[2]);
+				}
 			}
-			// clean up data a bit
-			$high = str_replace('&deg;', '', $high);
-			$high = str_replace('High', '', $high);
-			$high = trim($high);
-		//		echo "Column $column High: |$high|\n"; 
-			$low = trim($low);
-			$low = str_replace('&deg;', '', $low);
-			$dtos[$column]->setHighTemp($high);
-			$dtos[$column]->setLowTemp($low);
+			
 		}
 
 		//	grab chance of precipitation
