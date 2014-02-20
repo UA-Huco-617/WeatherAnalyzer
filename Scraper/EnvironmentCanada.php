@@ -48,11 +48,13 @@ class Scraper_EnvironmentCanada extends Weather_WeatherScraper{
 
 		//----------------------------------------------------------------------------
 		//	Prose Description
-		//	let's get this from the detailed forecast rather than from the img's @alt
+		//	let's get this from the detailed forecast rather than from the img's @alt;
+		//	problem: there are sometimes two entries per data ("Today" and "Tonight")
 		$date_header = $date[1] . '&nbsp;' . $date[2];
 		$prose_regex = "/{$date_header}<\/span><\/dt>\s*<dd>(.+?)<\/dd>/";
-		preg_match($prose_regex, $this->detailedForecast, $prose);
-		$dto->setProseDescription(trim($prose[1]));
+		preg_match_all($prose_regex, $this->detailedForecast, $prose);
+		$desc = join(' ', $prose[1]);
+		$dto->setProseDescription(trim($desc));
 
 		//----------------------------------------------------------------------------
 		//	Wind
@@ -62,7 +64,7 @@ class Scraper_EnvironmentCanada extends Weather_WeatherScraper{
 
 		$wind_regex = '/Wind (?:becoming )?(\w+) (\d+) (.+?)[. ]/';
 		//	sometimes that regex won't match, so don't set Wind data unless we get a hit.
-		if (preg_match($wind_regex, $prose[1], $windData)) {
+		if (preg_match($wind_regex, $desc, $windData)) {
 			$direction = Utility_WindDirection::getDegrees($windData[1]);
 			$dto->setWindDirection($direction);
 			$dto->setWindSpeed($windData[2]);
