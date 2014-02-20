@@ -70,7 +70,6 @@ class Scraper_CbcWeatherScraper extends Weather_WeatherScraper {
 		//	grab dates from row #1
 		$date_regex = '/<p>(.+?)<\/p>/';
 		preg_match_all($date_regex, $html_rows[1], $dates);
-		//print_r($dates[1]);
 
 		//	loop through the columns, setting the date on the proper DTO
 		for ($column = 0; $column < 6; $column++) {
@@ -103,7 +102,7 @@ class Scraper_CbcWeatherScraper extends Weather_WeatherScraper {
 				$high = str_replace('&deg;', '', $high);
 				$high = str_replace('High', '', $high);
 				$high = trim($high);
-				//		echo "Column $column High: |$high|\n"; 
+				//	 low temp
 				$low = trim($low);
 				$low = str_replace('&deg;', '', $low);
 				$dtos[$column]->setHighTemp($high);
@@ -112,16 +111,16 @@ class Scraper_CbcWeatherScraper extends Weather_WeatherScraper {
 				$solo_regex = '/(High|Low)?\s*([-.0-9]+)&deg;/';
 				preg_match($solo_regex, $raw[1], $solo);
 				if ($solo[1] == 'High') {
-					$dto[$column]->setHighTemp($solo[2]);
+					$dtos[$column]->setHighTemp($solo[2]);
 				} else {
-					$dto[$column]->setLowTemp($solo[2]);
+					$dtos[$column]->setLowTemp($solo[2]);
 				}
 			}
 			
 		}
 
 		//	grab chance of precipitation
-		$pop_regex = '/P.O.P. (\d+)%/';
+		$pop_regex = '/P\.O\.P\.\s*(\d+)%/i';
 		preg_match_all($pop_regex, $html_rows[4], $pop);
 
 		for ($column = 0; $column < 6; $column++) {
@@ -129,7 +128,6 @@ class Scraper_CbcWeatherScraper extends Weather_WeatherScraper {
 				$dtos[$column]->setChanceOfPrecip($pop[1][$column]);
 			}
 		}
-
 
 		//add to collection
 		foreach ($dtos as $dto) {
