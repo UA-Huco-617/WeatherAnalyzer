@@ -134,6 +134,12 @@ class Scraper_CbcWeatherScraper extends Weather_WeatherScraper {
 		foreach ($dtos as $dto) {
 			$this->addToCollection($dto);
 		}
+
+		if (count($this->weathercollection) > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
