@@ -58,8 +58,13 @@ class Weather_AirportWeatherScraper extends Weather_RealWeatherScraper {
 	    	[1][9] => direction of max gust (ignore)
 	    	[1][10] => speed of max gust (ignore)
 		*/
-		$this->dto->setHighTemp($this->validate($m[1][0]));
-		$this->dto->setLowTemp($this->validate($m[1][1]));
+	    //	Sometimes, temps will have an "E" suffix to
+	    //	indicate an estimate. We can just remove that,
+	    //	otherwise, we'll insert NULL.
+	    $high = str_replace('E', '', $m[1][0]);
+		$this->dto->setHighTemp($this->validate($high));
+		$low = str_replace('E', '', $m[1][1]);
+		$this->dto->setLowTemp($this->validate($low));
 		$this->dto->setRainAmount($this->validate($m[1][5]));
 		$this->dto->setRainUnit('mm');
 		$this->dto->setSnowAmount($this->validate($m[1][6]));
