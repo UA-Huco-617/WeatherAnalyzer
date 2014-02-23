@@ -6,7 +6,11 @@ class Weather_WeatherCollection implements Iterator, Countable {
 	protected $pointer = 0;				//	for Iterator
 
 	public function addToCollection(Weather_WeatherDTO $weatherdto) {
-		$this->collection[] = $weatherdto;
+		if ($this->collection[] = $weatherdto) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public function saveToDatabase() {
