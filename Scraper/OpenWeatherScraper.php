@@ -19,13 +19,30 @@ class Scraper_OpenWeatherScraper extends Weather_WeatherScraper {
 	protected $siteID = 3;				//	your Site ID from the `weather_site` table in birdclub
 	protected $siteURL = 'http://www.weatherforecastmap.com/canada/edmonton';			//	your URL to scrape
 
+	//	override constructor to get a little more feedback
+	public function __construct() {
+		$this->weathercollection = new Weather_WeatherCollection();
+		date_default_timezone_set('America/Edmonton');
+		$this->html = Utility_SecretAgent::getURL($this->siteURL);
+		if (!$this->html) Utility_Logger::log(__METHOD__ . ' has no HTML from cURL.');
+		$this->html = $this->cleanup($this->html);
+	}
+
 	public function scrape() {
 		$rows=$this->extractRowsFromHTML($this->html);
+		if (!$rows) Utility_Logger::log(__METHOD__ . ' could extract no rows from HTML.');
 		foreach ($rows as $row) {
 			$dto=$this->buildDTOFromRow($row);
-			$this->addToCollection($dto);
+			Utility_Logger::log(__METHOD__ . ' has a DTO; adding.');
+			if ($this->addToCollection($dto)) {
+				Utility_Logger::log('Added.');
+			} else {
+				Utility_Logger::log('Failed.');
+			}
 		}
-		return count($this->weathercollection);
+		$how_many = count($this->weathercollection);
+		Utility_Logger::log('Built ' . $how_many . ' DTOs.');
+		return $how_many;
 	}
 	
 	public function extractRowsFromHTML($html) {
