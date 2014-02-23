@@ -31,7 +31,7 @@ abstract class Weather_WeatherScraper {
 	}
 	
 	public function addToCollection(Weather_WeatherDTO $dto = null) {
-		if (!empty($dto)) $this->weathercollection->addToCollection($dto);
+		if (!empty($dto)) return $this->weathercollection->addToCollection($dto);
 	}
 	
 	public function getSiteID() {
