@@ -33,15 +33,16 @@ class Scraper_OpenWeatherScraper extends Weather_WeatherScraper {
 		if (!$rows) Utility_Logger::log(__METHOD__ . ' could extract no rows from HTML.');
 		foreach ($rows as $row) {
 			$dto=$this->buildDTOFromRow($row);
-			Utility_Logger::log(__METHOD__ . ' has a DTO; adding.');
+			/*Utility_Logger::log(__METHOD__ . ' has a DTO; adding.');
 			if ($this->addToCollection($dto)) {
 				Utility_Logger::log('Added.');
 			} else {
 				Utility_Logger::log('Failed.');
 			}
+			*/
 		}
 		$how_many = count($this->weathercollection);
-		Utility_Logger::log('Built ' . $how_many . ' DTOs.');
+		Utility_Logger::log(__METHOD__ . ' built ' . $how_many . ' DTOs.');
 		return $how_many;
 	}
 	
