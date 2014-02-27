@@ -16,27 +16,50 @@ class Scraper_Wunderground extends Weather_WeatherScraper{
 	//	7. return count($this->weathercollection);
 	
 	protected $siteID = 10;
-	protected $siteURL = 'http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=IALBERTA60&day=9&year=2014&month=2&graphspan=day';
+	protected $siteURL = 'http://www.wunderground.com/global/stations/71123.html?MR=1';
 	
 	public function scrape(){
 
-		$rows = $this->extractRowsFromHTML();
-		foreach($rows as $row){
-			$dto = $this->buildDTOFromRow($row);
-			$this->addToCollection($dto);
-		}//foreach
+		$arrayForecast = $this->getProseForecast();
+		foreach ($arrayForecast as $forecastDay => $forecastProse) {
+			$weatherdto = new Weather_WeatherDTO($this);
+			$weatherdto->setForecastDate($forecastDay);
+			$weatherdto->setProseDescription($forecastProse);
+			$this->addToCollection($weatherdto);
+		} // foreach
+
 		return count($this->weathercollection);
 
-	} //scrape()
+	} // scrape()
 
-	public function extractRowsFromHTML($html){
+	public function getProseForecast() {
+		$html = file_get_contents("http://www.wunderground.com/global/stations/71123.html?MR=1");
+		$html = str_replace("\n", '', $html);
+		$div_regex = '/<div class="p5">(.+?)<\/table>\s*<\/div>/';
+		$arrayForecast = array();
+		preg_match_all($div_regex, $html, $divs);
+		foreach ($divs[1] as $div) {
+			$currentDay = $this->getDay($div);
+			$currentProseForecast = $this->getProse($div);
+			$arrayForecast[$currentDay] = $currentProseForecast;			
+		} // foreach
+		return $arrayForecast;
+	}
 
-		$regex = '/<tbody>(<tr>(.+?)<\/tr>)+<\/tbody>/';
-		preg_match_all($regex, $html, $rows);
-		print_r($rows);
-		exit;
+	protected function getDay($divDay){
+		$dayRegex = '/<div class="b">(.+?)<\/div>/';
+		preg_match($dayRegex, $divDay, $day);
+		echo $day[1]."\n";
+		return $currentDay = $day[1];
+	} // getDay
 
-	} //extractRowsFromHTML
-} //Scraper_Wunderground
+	protected function getProse($divProse){
+		$proseRegex = '/<td class="vaT full">(.+?)<\/td>/';
+		preg_match($proseRegex, $divProse, $prose);
+		echo $prose[1]."\n\n";
+		return $currentProseForecast = $prose[1];
+	} // getProse
+
+} // Scraper_Wunderground
 
 ?>

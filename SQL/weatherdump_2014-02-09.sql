@@ -19,9 +19,9 @@
 -- Current Database: `weather`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `weather` /*!40100 DEFAULT CHARACTER SET utf8 */;
+-- CREATE DATABASE /*!32312 IF NOT EXISTS*/ `weather` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
-USE `weather`;
+-- USE `weather`;
 
 --
 -- Table structure for table `weather_agent`
