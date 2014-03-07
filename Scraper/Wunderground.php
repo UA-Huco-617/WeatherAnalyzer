@@ -1,65 +1,134 @@
 <?php
 
-class Scraper_Wunderground extends Weather_WeatherScraper{
-
-	//	scrape() should do the following.
-	//	1. for each day's forecast:
-	//	2. build a new Weather_WeatherDTO object:
-	//		$weatherdto = new Weather_WeatherDTO($this);
-	//	3. set the forecast date on the WeatherDTO
-	//		$weatherdto->setDate($some_string);
-	//		(test your data with class Date to make sure it works)
-	//	4. collect data and push it into the WeatherDTO
-	//	5. add the WeatherDTO object to the collection
-	//		$this->addToCollection($weatherdto);
-	//	6. while still more days, go to step 1
-	//	7. return count($this->weathercollection);
+class Scraper_WundergroundHQ extends Weather_WeatherScraper {
 	
 	protected $siteID = 10;
 	protected $siteURL = 'http://www.wunderground.com/global/stations/71123.html?MR=1';
+	protected $days_in_future = 0;
+	protected $divs = array(); 	// an array of prose forecasts; two per day
+
+	public function __construct() {
+		$this->weathercollection = new Weather_WeatherCollection();
+		date_default_timezone_set('America/Edmonton');
+		//$this->html = $this->cleanup(Utility_SecretAgent::getURL($this->siteURL));
+		$this->html = $this->cleanup(file_get_contents('wunderground2.html'));
+	}
 	
-	public function scrape(){
-
-		$arrayForecast = $this->getProseForecast();
-		foreach ($arrayForecast as $forecastDay => $forecastProse) {
-			$weatherdto = new Weather_WeatherDTO($this);
-			$weatherdto->setForecastDate($forecastDay);
-			$weatherdto->setProseDescription($forecastProse);
-			$this->addToCollection($weatherdto);
-		} // foreach
-
+	public function scrape() {
+		// site has a series of DIVs; each day is two:
+		//	one for daytime, one for nighttime.
+		$section = $this->getProperSection();
+		$this->divs = $this->parseDivs($section);
+		do {
+			$dto = $this->buildDTO();
+			$this->addToCollection($dto);
+		} while (count($this->divs) > 0);
 		return count($this->weathercollection);
-
-	} // scrape()
-
-	public function getProseForecast() {
-		$html = file_get_contents("http://www.wunderground.com/global/stations/71123.html?MR=1");
-		$html = str_replace("\n", '', $html);
-		$div_regex = '/<div class="p5">(.+?)<\/table>\s*<\/div>/';
-		$arrayForecast = array();
-		preg_match_all($div_regex, $html, $divs);
-		foreach ($divs[1] as $div) {
-			$currentDay = $this->getDay($div);
-			$currentProseForecast = $this->getProse($div);
-			$arrayForecast[$currentDay] = $currentProseForecast;			
-		} // foreach
-		return $arrayForecast;
 	}
 
-	protected function getDay($divDay){
-		$dayRegex = '/<div class="b">(.+?)<\/div>/';
-		preg_match($dayRegex, $divDay, $day);
-		echo $day[1]."\n";
-		return $currentDay = $day[1];
-	} // getDay
+	public function getProperSection() {
+		$regex = '/<div>Descriptive Forecast(.+?)conds_details_radarbox/';
+		if (!preg_match($regex, $this->html, $matches)) {
+			Utility_Logger::log(__METHOD__ . " cannot retrieve section containing forecasts.");
+			return null;
+		}
+		return $matches[1];
+	}
 
-	protected function getProse($divProse){
-		$proseRegex = '/<td class="vaT full">(.+?)<\/td>/';
-		preg_match($proseRegex, $divProse, $prose);
-		echo $prose[1]."\n\n";
-		return $currentProseForecast = $prose[1];
-	} // getProse
+	public function parseDivs($divs) {
+		$regex = '/<div class="b">(.+?)<\/table>\s*<\/div>/';
+		preg_match_all($regex, $divs, $matches);
+		return $matches[1];
+	}
 
-} // Scraper_Wunderground
+	public function buildDTO() {
+		if (count($this->divs) == 0) return null;
+		$forecast = $this->popForecastFromDIVs();
+		$dto = new Weather_WeatherDTO($this);
+		$dto->setForecastDate($this->extractDate($forecast));
+		$dto->setProseDescription($forecast);
+		$dto->setHighTemp($this->extractHighTemp($forecast));
+		$dto->setLowTemp($this->extractLowTemp($forecast));
+		$dto->setWindSpeed($this->extractWindSpeed($forecast));
+		$dto->setWindDirection($this->extractWindDirection($forecast));
+		// wind speed on this site seems consistently to be kmh
+		$dto->setWindSpeedUnit('km/h');
+		$dto->setChanceOfPrecip($this->extractCOP($forecast));
+		$dto->setSnowAmount($this->extractSnowAmount($forecast));
+		//	don't know how they handle rain yet; revisit this later!
+		return $dto;
+	}
+
+	public function popForecastFromDIVs() {
+		$forecast = '';
+		do {
+			$forecast .= array_shift($this->divs);
+		} while (!preg_match('/night<\/div>/', $forecast));
+		$forecast = strip_tags($forecast);
+		$forecast = preg_replace('/\s{2,}/', ' ', $forecast);
+		return trim($forecast);
+	}
+
+	public function extractDate($string) {
+		if (stripos($string, 'today') !== false or stripos($string, 'tonight') !== false) return 'today';
+		$this->days_in_future++;
+		return "today + {$this->days_in_future} days";
+	}
+
+	public function extractHighTemp($string) {
+		$regex = '/High(?:.+?)([-0-9]+)C/i';
+		if (preg_match($regex, $string, $matches)) {
+			return $matches[1];
+		} else {
+			return null;
+		}
+	}
+
+	public function extractLowTemp($string) {
+		$regex = '/Low(?:.+?)([-0-9]+)C/i';
+		if (preg_match($regex, $string, $matches)) {
+			return $matches[1];
+		} else {
+			return null;
+		}
+	}
+
+	public function extractWindSpeed($string) {
+		$speeds = array();
+		$regex = '/Winds (?:\w+) at (\d+) to (\d+) kmh/i';
+		preg_match_all($regex, $string, $matches);
+		$speeds = array_merge($matches[1], $matches[2]);
+		return Utility_Statistics::getAverage($speeds);
+	}
+
+	public function extractWindDirection($string) {
+		$degrees = array();
+		$regex = '/Winds (\w+) at (?:\d+) to (?:\d+) kmh/i';
+		preg_match_all($regex, $string, $matches);
+		foreach ($matches[1] as $dir) {
+			$degrees[] = Utility_WindDirection::getDegrees($dir);
+		}
+		return Utility_WindDirection::getAverageWindDirection($degrees);
+	}
+
+	public function extractCOP($string) {
+		$regex = '/Chance of (?:\w+) (\d+)%/';
+		if (preg_match($regex, $string, $matches)) {
+			return $matches[1];
+		} else {
+			return null;
+		}
+	}
+
+	public function extractSnowAmount($string) {
+		$regex = '/Snow accumulation(?:.+?)([.0-9]+)cm/i';
+		if (preg_match($regex, $string, $matches)) {
+			return $matches[1];
+		} else {
+			return null;
+		}
+	}
+
+}
 
 ?>
