@@ -7,13 +7,6 @@ class Scraper_WundergroundHQ extends Weather_WeatherScraper {
 	protected $days_in_future = 0;
 	protected $divs = array(); 	// an array of prose forecasts; two per day
 
-	public function __construct() {
-		$this->weathercollection = new Weather_WeatherCollection();
-		date_default_timezone_set('America/Edmonton');
-		//$this->html = $this->cleanup(Utility_SecretAgent::getURL($this->siteURL));
-		$this->html = $this->cleanup(file_get_contents('wunderground2.html'));
-	}
-	
 	public function scrape() {
 		// site has a series of DIVs; each day is two:
 		//	one for daytime, one for nighttime.
