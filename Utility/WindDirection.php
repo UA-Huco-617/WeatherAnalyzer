@@ -26,6 +26,7 @@ class Utility_WindDirection {
 		//	and average, then find the arctangent of the averaged point.
 		$sum_x = $sum_y = 0;
 		$count = count($rows);
+		if ($count == 0) return null;
 		foreach ($rows as $direction) {
 			$sum_x += cos(deg2rad($direction));
 			$sum_y += sin(deg2rad($direction));
