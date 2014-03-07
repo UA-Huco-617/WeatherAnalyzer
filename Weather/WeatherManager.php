@@ -62,7 +62,7 @@ class Weather_WeatherManager {
 			}
 			$successful_scrapers++;
 			$collection = $scraper->getWeatherDTOCollection();
-			Utility_Logger::log(get_class($scraper) ' retrieved ' . count($collection) . ' DTOs.');
+			Utility_Logger::log(get_class($scraper) . ' retrieved ' . count($collection) . ' DTOs.');
 			$records_saved += $collection->saveToDatabase();
 		}
 		Utility_Logger::log("End run: {$successful_scrapers} scrapers saved {$records_saved} records into the database.");
