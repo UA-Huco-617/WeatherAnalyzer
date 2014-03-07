@@ -1,6 +1,6 @@
 <?php
 
-class Scraper_WundergroundHQ extends Weather_WeatherScraper {
+class Scraper_Wunderground extends Weather_WeatherScraper {
 	
 	protected $siteID = 10;
 	protected $siteURL = 'http://www.wunderground.com/global/stations/71123.html?MR=1';
